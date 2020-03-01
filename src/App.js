@@ -2,6 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import contract from 'truffle-contract'
 import {web3connect, fetchTodos, addTodo, instantiateTodoContract} from './actions';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemIcon';
+import List from '@material-ui/core/List';
+import ListItemText from '@material-ui/core/ListItemText';
+
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -41,8 +46,26 @@ class App extends Component {
       );
     })
   }
+  renderDebate(todos) {
+    return todos.map((todo, i) => {
+      return (
+        <li key={i}>{todo}</li>
+      );
+    })
+  }
+  renderArgument(todos) {
+    return todos.map((todo, i) => {
+      return (
+        <li key={i}>  {todo}    </li>
+      );
+    })
+  }
   addTodo() {
     this.props.addTodo(this.state.textarea);
+  }
+
+  generateDebate() {
+    this.props.generateDebate(this.state.textarea);
   }
 
   render() {
@@ -61,10 +84,41 @@ class App extends Component {
             <div className="pure-u-1-1">
               <h1>Todos</h1>
               <textarea id="textarea" value={this.state.textarea} onChange={this.handleTextAreaChange.bind(this)} />
-              <button onClick={this.addTodo.bind(this)}>Add Todo</button>
+              <button onClick={this.addTodo.bind(this)}>Generate Debate</button>
+              <textarea id="textarea" value={this.state.textarea} onChange={this.handleTextAreaChange.bind(this)} />
+              <button onClick={this.addTodo.bind(this)}>Add Argument</button>
               <ul>
                 {this.renderTodos(this.props.todos)}
               </ul>
+              <ul>
+                {this.renderDebate(this.props.todos)}
+              </ul>
+              <ul>
+                {this.renderArgument(this.props.todos)}
+              </ul>
+
+              <List>
+
+              {this.props.todos.map( comment =>
+                <ListItem button key={comment.todo }>
+                  <ListItemAvatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={comment.todo} />
+
+                </ListItem>
+                
+                
+                
+                
+                )}
+
+
+              </List>
+
+
+
+
+
             </div>
           </div>
         </main>
@@ -77,7 +131,7 @@ const mapDispatchToProps = {
   web3connect,
   instantiateTodoContract,
   fetchTodos,
-  addTodo
+  addTodo,
 };
 
 const mapStateToProps = (state) => ({

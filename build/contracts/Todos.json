@@ -32,25 +32,25 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"todo\",\"type\":\"bytes32\"}],\"name\":\"addTodo\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getTodos\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/derek/Documents/JenkyVote/contracts/Todos.sol\":\"Todos\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/derek/Documents/JenkyVote/contracts/Todos.sol\":{\"keccak256\":\"0x6389f321cebac37ccc6aa3d24fd54b58908ca5a2004b1e888e2bb59672041366\",\"urls\":[\"bzz-raw://a4032c92f5d60fdd574bcb224dd839c319709e051fcd5591d5acd32e9f9de775\",\"dweb:/ipfs/QmcDHxerzJJFSta9YmCsG32A6ffjViJ88YuaSWTaiSKwxi\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b50610184806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063c33926cb1461003b578063da2f64601461009a575b600080fd5b6100436100c8565b6040518080602001828103825283818151815260200191508051906020019060200280838360005b8381101561008657808201518184015260208101905061006b565b505050509050019250505060405180910390f35b6100c6600480360360208110156100b057600080fd5b8101908080359060200190929190505050610120565b005b6060600080548060200260200160405190810160405280929190818152602001828054801561011657602002820191906000526020600020905b815481526020019060010190808311610102575b5050505050905090565b60008190806001815401808255809150509060018203906000526020600020016000909192909190915055505056fea265627a7a72315820130e574f7612b9a6984c332a5214d5c66e65c0babf0c4d6ea771f29b90d1db3564736f6c63430005100032",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c8063c33926cb1461003b578063da2f64601461009a575b600080fd5b6100436100c8565b6040518080602001828103825283818151815260200191508051906020019060200280838360005b8381101561008657808201518184015260208101905061006b565b505050509050019250505060405180910390f35b6100c6600480360360208110156100b057600080fd5b8101908080359060200190929190505050610120565b005b6060600080548060200260200160405190810160405280929190818152602001828054801561011657602002820191906000526020600020905b815481526020019060010190808311610102575b5050505050905090565b60008190806001815401808255809150509060018203906000526020600020016000909192909190915055505056fea265627a7a72315820130e574f7612b9a6984c332a5214d5c66e65c0babf0c4d6ea771f29b90d1db3564736f6c63430005100032",
-  "sourceMap": "34:211:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;34:211:1;;;;;;;",
-  "deployedSourceMap": "34:211:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;34:211:1;;;;;;;;;;;;;;;;;;;;;;;;155:88;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;155:88:1;;;;;;;;;;;;;;;;;78:71;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;78:71:1;;;;;;;;;;;;;;;;;:::i;:::-;;155:88;196:16;231:5;224:12;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;155:88;:::o;78:71::-;126:5;137:4;126:16;;39:1:-1;33:3;27:10;23:18;57:10;52:3;45:23;79:10;72:17;;0:93;126:16:1;;;;;;;;;;;;;;;;;;;;;;78:71;:::o",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"todo\",\"type\":\"bytes32\"}],\"name\":\"addTodo\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getTodos\",\"outputs\":[{\"internalType\":\"bytes32[]\",\"name\":\"\",\"type\":\"bytes32[]\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/derek/Documents/ArborVote/contracts/Todos.sol\":\"Todos\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/derek/Documents/ArborVote/contracts/Todos.sol\":{\"keccak256\":\"0x6389f321cebac37ccc6aa3d24fd54b58908ca5a2004b1e888e2bb59672041366\",\"urls\":[\"bzz-raw://a4032c92f5d60fdd574bcb224dd839c319709e051fcd5591d5acd32e9f9de775\",\"dweb:/ipfs/QmcDHxerzJJFSta9YmCsG32A6ffjViJ88YuaSWTaiSKwxi\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610184806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063c33926cb1461003b578063da2f64601461009a575b600080fd5b6100436100c8565b6040518080602001828103825283818151815260200191508051906020019060200280838360005b8381101561008657808201518184015260208101905061006b565b505050509050019250505060405180910390f35b6100c6600480360360208110156100b057600080fd5b8101908080359060200190929190505050610120565b005b6060600080548060200260200160405190810160405280929190818152602001828054801561011657602002820191906000526020600020905b815481526020019060010190808311610102575b5050505050905090565b60008190806001815401808255809150509060018203906000526020600020016000909192909190915055505056fea265627a7a723158203f828357996c702c9c466dd4092ba08cb631f49e357d0bfea7b332121b7c003964736f6c63430005100032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c8063c33926cb1461003b578063da2f64601461009a575b600080fd5b6100436100c8565b6040518080602001828103825283818151815260200191508051906020019060200280838360005b8381101561008657808201518184015260208101905061006b565b505050509050019250505060405180910390f35b6100c6600480360360208110156100b057600080fd5b8101908080359060200190929190505050610120565b005b6060600080548060200260200160405190810160405280929190818152602001828054801561011657602002820191906000526020600020905b815481526020019060010190808311610102575b5050505050905090565b60008190806001815401808255809150509060018203906000526020600020016000909192909190915055505056fea265627a7a723158203f828357996c702c9c466dd4092ba08cb631f49e357d0bfea7b332121b7c003964736f6c63430005100032",
+  "sourceMap": "34:211:2:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;34:211:2;;;;;;;",
+  "deployedSourceMap": "34:211:2:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;34:211:2;;;;;;;;;;;;;;;;;;;;;;;;155:88;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;155:88:2;;;;;;;;;;;;;;;;;78:71;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;78:71:2;;;;;;;;;;;;;;;;;:::i;:::-;;155:88;196:16;231:5;224:12;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;155:88;:::o;78:71::-;126:5;137:4;126:16;;39:1:-1;33:3;27:10;23:18;57:10;52:3;45:23;79:10;72:17;;0:93;126:16:2;;;;;;;;;;;;;;;;;;;;;;78:71;:::o",
   "source": "pragma solidity >=0.4.22 <0.7.0;\n\ncontract Todos {\n    bytes32[] todos;\n\n\n    function addTodo(bytes32 todo) public {\n        todos.push(todo);\n    }\n\n    function getTodos() public view returns (bytes32[] memory) {\n        return todos;\n    }\n}\n",
-  "sourcePath": "/home/derek/Documents/JenkyVote/contracts/Todos.sol",
+  "sourcePath": "/home/derek/Documents/ArborVote/contracts/Todos.sol",
   "ast": {
-    "absolutePath": "/home/derek/Documents/JenkyVote/contracts/Todos.sol",
+    "absolutePath": "/home/derek/Documents/ArborVote/contracts/Todos.sol",
     "exportedSymbols": {
       "Todos": [
-        83
+        458
       ]
     },
-    "id": 84,
+    "id": 459,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 58,
+        "id": 433,
         "literals": [
           "solidity",
           ">=",
@@ -61,7 +61,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:32:1"
+        "src": "0:32:2"
       },
       {
         "baseContracts": [],
@@ -69,20 +69,20 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 83,
+        "id": 458,
         "linearizedBaseContracts": [
-          83
+          458
         ],
         "name": "Todos",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 61,
+            "id": 436,
             "name": "todos",
             "nodeType": "VariableDeclaration",
-            "scope": 83,
-            "src": "55:15:1",
+            "scope": 458,
+            "src": "55:15:2",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -91,19 +91,19 @@
             },
             "typeName": {
               "baseType": {
-                "id": 59,
+                "id": 434,
                 "name": "bytes32",
                 "nodeType": "ElementaryTypeName",
-                "src": "55:7:1",
+                "src": "55:7:2",
                 "typeDescriptions": {
                   "typeIdentifier": "t_bytes32",
                   "typeString": "bytes32"
                 }
               },
-              "id": 60,
+              "id": 435,
               "length": null,
               "nodeType": "ArrayTypeName",
-              "src": "55:9:1",
+              "src": "55:9:2",
               "typeDescriptions": {
                 "typeIdentifier": "t_array$_t_bytes32_$dyn_storage_ptr",
                 "typeString": "bytes32[]"
@@ -114,9 +114,9 @@
           },
           {
             "body": {
-              "id": 72,
+              "id": 447,
               "nodeType": "Block",
-              "src": "116:33:1",
+              "src": "116:33:2",
               "statements": [
                 {
                   "expression": {
@@ -124,12 +124,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 69,
+                        "id": 444,
                         "name": "todo",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 63,
-                        "src": "137:4:1",
+                        "referencedDeclaration": 438,
+                        "src": "137:4:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -145,18 +145,18 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 66,
+                        "id": 441,
                         "name": "todos",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 61,
-                        "src": "126:5:1",
+                        "referencedDeclaration": 436,
+                        "src": "126:5:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_bytes32_$dyn_storage",
                           "typeString": "bytes32[] storage ref"
                         }
                       },
-                      "id": 68,
+                      "id": 443,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -164,13 +164,13 @@
                       "memberName": "push",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "126:10:1",
+                      "src": "126:10:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_arraypush_nonpayable$_t_bytes32_$returns$_t_uint256_$",
                         "typeString": "function (bytes32) returns (uint256)"
                       }
                     },
-                    "id": 70,
+                    "id": 445,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -178,36 +178,36 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "126:16:1",
+                    "src": "126:16:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 71,
+                  "id": 446,
                   "nodeType": "ExpressionStatement",
-                  "src": "126:16:1"
+                  "src": "126:16:2"
                 }
               ]
             },
             "documentation": null,
-            "id": 73,
+            "id": 448,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "addTodo",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 64,
+              "id": 439,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 63,
+                  "id": 438,
                   "name": "todo",
                   "nodeType": "VariableDeclaration",
-                  "scope": 73,
-                  "src": "95:12:1",
+                  "scope": 448,
+                  "src": "95:12:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -215,10 +215,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 62,
+                    "id": 437,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "95:7:1",
+                    "src": "95:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -228,71 +228,71 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "94:14:1"
+              "src": "94:14:2"
             },
             "returnParameters": {
-              "id": 65,
+              "id": 440,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "116:0:1"
+              "src": "116:0:2"
             },
-            "scope": 83,
-            "src": "78:71:1",
+            "scope": 458,
+            "src": "78:71:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 81,
+              "id": 456,
               "nodeType": "Block",
-              "src": "214:29:1",
+              "src": "214:29:2",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 79,
+                    "id": 454,
                     "name": "todos",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 61,
-                    "src": "231:5:1",
+                    "referencedDeclaration": 436,
+                    "src": "231:5:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_bytes32_$dyn_storage",
                       "typeString": "bytes32[] storage ref"
                     }
                   },
-                  "functionReturnParameters": 78,
-                  "id": 80,
+                  "functionReturnParameters": 453,
+                  "id": 455,
                   "nodeType": "Return",
-                  "src": "224:12:1"
+                  "src": "224:12:2"
                 }
               ]
             },
             "documentation": null,
-            "id": 82,
+            "id": 457,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "getTodos",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 74,
+              "id": 449,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "172:2:1"
+              "src": "172:2:2"
             },
             "returnParameters": {
-              "id": 78,
+              "id": 453,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 77,
+                  "id": 452,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 82,
-                  "src": "196:16:1",
+                  "scope": 457,
+                  "src": "196:16:2",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -301,19 +301,19 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 75,
+                      "id": 450,
                       "name": "bytes32",
                       "nodeType": "ElementaryTypeName",
-                      "src": "196:7:1",
+                      "src": "196:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes32",
                         "typeString": "bytes32"
                       }
                     },
-                    "id": 76,
+                    "id": 451,
                     "length": null,
                     "nodeType": "ArrayTypeName",
-                    "src": "196:9:1",
+                    "src": "196:9:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_bytes32_$dyn_storage_ptr",
                       "typeString": "bytes32[]"
@@ -323,33 +323,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "195:18:1"
+              "src": "195:18:2"
             },
-            "scope": 83,
-            "src": "155:88:1",
+            "scope": 458,
+            "src": "155:88:2",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 84,
-        "src": "34:211:1"
+        "scope": 459,
+        "src": "34:211:2"
       }
     ],
-    "src": "0:246:1"
+    "src": "0:246:2"
   },
   "legacyAST": {
-    "absolutePath": "/home/derek/Documents/JenkyVote/contracts/Todos.sol",
+    "absolutePath": "/home/derek/Documents/ArborVote/contracts/Todos.sol",
     "exportedSymbols": {
       "Todos": [
-        83
+        458
       ]
     },
-    "id": 84,
+    "id": 459,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 58,
+        "id": 433,
         "literals": [
           "solidity",
           ">=",
@@ -360,7 +360,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:32:1"
+        "src": "0:32:2"
       },
       {
         "baseContracts": [],
@@ -368,20 +368,20 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 83,
+        "id": 458,
         "linearizedBaseContracts": [
-          83
+          458
         ],
         "name": "Todos",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 61,
+            "id": 436,
             "name": "todos",
             "nodeType": "VariableDeclaration",
-            "scope": 83,
-            "src": "55:15:1",
+            "scope": 458,
+            "src": "55:15:2",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -390,19 +390,19 @@
             },
             "typeName": {
               "baseType": {
-                "id": 59,
+                "id": 434,
                 "name": "bytes32",
                 "nodeType": "ElementaryTypeName",
-                "src": "55:7:1",
+                "src": "55:7:2",
                 "typeDescriptions": {
                   "typeIdentifier": "t_bytes32",
                   "typeString": "bytes32"
                 }
               },
-              "id": 60,
+              "id": 435,
               "length": null,
               "nodeType": "ArrayTypeName",
-              "src": "55:9:1",
+              "src": "55:9:2",
               "typeDescriptions": {
                 "typeIdentifier": "t_array$_t_bytes32_$dyn_storage_ptr",
                 "typeString": "bytes32[]"
@@ -413,9 +413,9 @@
           },
           {
             "body": {
-              "id": 72,
+              "id": 447,
               "nodeType": "Block",
-              "src": "116:33:1",
+              "src": "116:33:2",
               "statements": [
                 {
                   "expression": {
@@ -423,12 +423,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 69,
+                        "id": 444,
                         "name": "todo",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 63,
-                        "src": "137:4:1",
+                        "referencedDeclaration": 438,
+                        "src": "137:4:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -444,18 +444,18 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 66,
+                        "id": 441,
                         "name": "todos",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 61,
-                        "src": "126:5:1",
+                        "referencedDeclaration": 436,
+                        "src": "126:5:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_bytes32_$dyn_storage",
                           "typeString": "bytes32[] storage ref"
                         }
                       },
-                      "id": 68,
+                      "id": 443,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -463,13 +463,13 @@
                       "memberName": "push",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "126:10:1",
+                      "src": "126:10:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_arraypush_nonpayable$_t_bytes32_$returns$_t_uint256_$",
                         "typeString": "function (bytes32) returns (uint256)"
                       }
                     },
-                    "id": 70,
+                    "id": 445,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -477,36 +477,36 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "126:16:1",
+                    "src": "126:16:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 71,
+                  "id": 446,
                   "nodeType": "ExpressionStatement",
-                  "src": "126:16:1"
+                  "src": "126:16:2"
                 }
               ]
             },
             "documentation": null,
-            "id": 73,
+            "id": 448,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "addTodo",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 64,
+              "id": 439,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 63,
+                  "id": 438,
                   "name": "todo",
                   "nodeType": "VariableDeclaration",
-                  "scope": 73,
-                  "src": "95:12:1",
+                  "scope": 448,
+                  "src": "95:12:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -514,10 +514,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 62,
+                    "id": 437,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "95:7:1",
+                    "src": "95:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -527,71 +527,71 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "94:14:1"
+              "src": "94:14:2"
             },
             "returnParameters": {
-              "id": 65,
+              "id": 440,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "116:0:1"
+              "src": "116:0:2"
             },
-            "scope": 83,
-            "src": "78:71:1",
+            "scope": 458,
+            "src": "78:71:2",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 81,
+              "id": 456,
               "nodeType": "Block",
-              "src": "214:29:1",
+              "src": "214:29:2",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 79,
+                    "id": 454,
                     "name": "todos",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 61,
-                    "src": "231:5:1",
+                    "referencedDeclaration": 436,
+                    "src": "231:5:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_bytes32_$dyn_storage",
                       "typeString": "bytes32[] storage ref"
                     }
                   },
-                  "functionReturnParameters": 78,
-                  "id": 80,
+                  "functionReturnParameters": 453,
+                  "id": 455,
                   "nodeType": "Return",
-                  "src": "224:12:1"
+                  "src": "224:12:2"
                 }
               ]
             },
             "documentation": null,
-            "id": 82,
+            "id": 457,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "getTodos",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 74,
+              "id": 449,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "172:2:1"
+              "src": "172:2:2"
             },
             "returnParameters": {
-              "id": 78,
+              "id": 453,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 77,
+                  "id": 452,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 82,
-                  "src": "196:16:1",
+                  "scope": 457,
+                  "src": "196:16:2",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -600,19 +600,19 @@
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 75,
+                      "id": 450,
                       "name": "bytes32",
                       "nodeType": "ElementaryTypeName",
-                      "src": "196:7:1",
+                      "src": "196:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes32",
                         "typeString": "bytes32"
                       }
                     },
-                    "id": 76,
+                    "id": 451,
                     "length": null,
                     "nodeType": "ArrayTypeName",
-                    "src": "196:9:1",
+                    "src": "196:9:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_bytes32_$dyn_storage_ptr",
                       "typeString": "bytes32[]"
@@ -622,20 +622,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "195:18:1"
+              "src": "195:18:2"
             },
-            "scope": 83,
-            "src": "155:88:1",
+            "scope": 458,
+            "src": "155:88:2",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 84,
-        "src": "34:211:1"
+        "scope": 459,
+        "src": "34:211:2"
       }
     ],
-    "src": "0:246:1"
+    "src": "0:246:2"
   },
   "compiler": {
     "name": "solc",
@@ -650,8 +650,7 @@
     }
   },
   "schemaVersion": "3.0.23",
-  "updatedAt": "2020-03-01T00:28:05.502Z",
-  "networkType": "ethereum",
+  "updatedAt": "2020-03-01T01:40:17.204Z",
   "devdoc": {
     "methods": {}
   },

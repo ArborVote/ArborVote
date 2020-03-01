@@ -103,7 +103,7 @@ export function Debate(payload) {
         from: accounts[0]
       }).then((results) => {
         dispatch({
-          type: TODO_ADDED,
+          type: DEBATE_CREATED,
           payload
         });
       });

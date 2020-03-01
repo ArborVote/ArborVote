@@ -1,4 +1,4 @@
-import { WEB3_CONNECTED, TODO_ADDED, TODOS_CONTRACT_INSTANTIATED, TODOS_FETCHED, defaultState } from '../actions';
+import { WEB3_CONNECTED, DEBATE_CONTRACT_INSTANTIATED, DEBATE_CREATED, TODO_ADDED, TODOS_CONTRACT_INSTANTIATED, TODOS_FETCHED, defaultState } from '../actions';
 
 const todos = (state = defaultState, action) => {
   switch (action.type) {
@@ -7,6 +7,19 @@ const todos = (state = defaultState, action) => {
       ...state,
       web3: action.payload
     };
+    case DEBATE_CONTRACT_INSTANTIATED:
+      return {
+        ...state,
+        todosContract: action.payload
+      };
+      case DEBATE_CREATED:
+        return {
+          ...state,
+          todos: [
+            ...state.todos,
+            action.payload
+          ]
+        };
   case TODOS_CONTRACT_INSTANTIATED:
     return {
       ...state,
