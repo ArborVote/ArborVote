@@ -1,0 +1,25 @@
+{
+  "name": "ArborVote",
+  "version": "0.0.1",
+  "description": "Rational decision-making by quadratic voting on argument trees.",
+  "repository": "https://github.com/Michael-A-Heuer/ArborVote",
+  "scripts": {
+    "postinstall": "npm run build-app",
+    "build-app": "cd app && npm install && cd ..",
+    "compile": "buidler compile --force",
+    "start": "buidler start",
+    "test": "buidler test --network buidlerevm"
+  },
+  "dependencies": {
+    "@aragon/abis": "^1.1.0"
+  },
+  "devDependencies": {
+    "@aragon/buidler-aragon": "^0.1.0",
+    "@aragon/contract-test-helpers": "0.0.1",
+    "@nomiclabs/buidler": "^1.2.0",
+    "@nomiclabs/buidler-truffle5": "^1.2.0",
+    "@nomiclabs/buidler-web3": "^1.2.0",
+    "bignumber.js": "^9.0.0",
+    "web3": "^1.2.6"
+  }
+}
