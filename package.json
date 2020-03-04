@@ -4,6 +4,8 @@
   "description": "Rational decision-making by quadratic voting on argument trees.",
   "repository": "https://github.com/Michael-A-Heuer/ArborVote",
   "scripts": {
+    "buidlerevm": "buidler node > /dev/null &",
+    "stop": "sudo kill `sudo lsof -t -i:8545`",
     "postinstall": "npm run build-app",
     "build-app": "cd app && npm install && cd ..",
     "compile": "buidler compile --force",
