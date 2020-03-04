@@ -1,6 +1,9 @@
 const { usePlugin } = require('@nomiclabs/buidler/config')
 
-usePlugin('@aragon/buidler-aragon')
+usePlugin('@aragon/buidler-aragon');
+usePlugin("@nomiclabs/buidler-solhint");
+usePlugin("solidity-coverage");
+usePlugin("buidler-gas-reporter");
 
 module.exports = {
   defaultNetwork: 'localhost',
