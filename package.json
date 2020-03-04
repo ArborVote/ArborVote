@@ -8,7 +8,8 @@
     "build-app": "cd app && npm install && cd ..",
     "compile": "buidler compile --force",
     "start": "buidler start",
-    "test": "buidler test --network buidlerevm"
+    "test": "buidler test --network buidlerevm",
+    "coverage": "buidler coverage --network buidlerevm"
   },
   "dependencies": {
     "@aragon/abis": "^1.1.0"

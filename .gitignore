@@ -7,3 +7,8 @@ ipfs.cmd
 package-lock.json
 .idea
 .DS_Store
+coverage
+coverage.json
+.coverage_artifacts
+.coverage_cache
+.coverage_contracts
