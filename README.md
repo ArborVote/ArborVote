@@ -20,7 +20,7 @@ Participants create a binary tree of pro and con arguments and can express prefe
 Still, the platform is not designed for actual voting because it lacks resilience against manipulation and sybil attacks.
 
 This gap can be filled with blockchain technology by
-* adding a safe and **quadratic voting system** and 
+* adding a **decentralized and quadratic voting system** and 
 * providing **economic incentives** for participation.
 
 Argument-based decision-making could be a useful building block in future DAOs.
@@ -59,12 +59,9 @@ root
 ```
 
 ## Running the app
-
 To run the app in a browser with front end plus back end hot reloading, simply run `npm start`.
 
-
 ### npm Scripts
-
 - **postinstall**: Runs after installing dependencies.
 - **build-app**: Installs front end project (app/) dependencies.
 - **start** Runs your app inside a DAO.
