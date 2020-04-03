@@ -25,6 +25,10 @@ This gap can be filled with blockchain technology by
 
 Argument-based decision-making could be a useful building block in future DAOs.
 
+## Algorithm Outline
+
+![Example for the tree vote algorithm in ArborVote.](docs/ArborVote_VotingAlgorithm_Example.png)
+
 ## Project Structure
 
 This project has the following structure:
