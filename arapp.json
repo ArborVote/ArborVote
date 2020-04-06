@@ -1,13 +1,8 @@
 {
   "roles": [
     {
-      "name": "Increment the counter",
-      "id": "INCREMENT_ROLE",
-      "params": []
-    },
-    {
-      "name": "Decrement the counter",
-      "id": "DECREMENT_ROLE",
+      "name": "Vote on arguments",
+      "id": "VOTE_ROLE",
       "params": []
     }
   ],
@@ -17,5 +12,5 @@
       "appName": "arbor-vote.aragonpm.eth"
     }
   },
-  "path": "contracts/CounterApp.sol"
+  "path": "contracts/ArborVoteApp.sol"
 }

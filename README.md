@@ -35,7 +35,7 @@ root
 ├ ├── src
 ├ └── package.json
 ├── contracts
-├ └── CounterApp.sol
+├ └── ArborVoteApp.sol
 ├── test
 ├── arapp.json
 ├── manifest.json

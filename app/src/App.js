@@ -7,6 +7,7 @@ import {
   Header,
   IconMinus,
   IconPlus,
+  IconAddUser,
   Main,
   SyncIndicator,
   Tabs,
@@ -17,7 +18,7 @@ import styled from 'styled-components'
 
 function App() {
   const { api, appState, path, requestPath } = useAragonApi()
-  const { count, isSyncing } = appState
+  const { count, votes, isSyncing } = appState
 
   const pathParts = path.match(/^\/tab\/([0-9]+)/)
   const pageIndex = Array.isArray(pathParts)
@@ -54,22 +55,25 @@ function App() {
           ${textStyle('title3')};
         `}
       >
-        Count: {count}
+        Count: {count}, Votes: {votes}
         <Buttons>
           <Button
             display="icon"
+            icon={<IconAddUser />}
+            label="join"
+            onClick={() => api.join().toPromise()}
+          />
+          <Button
+            display="icon"
             icon={<IconMinus />}
-            label="Decrement"
-            onClick={() => api.decrement(1).toPromise()}
+            label="voteAgainst"
+            onClick={() => api.voteAgainst(0,1).toPromise()}
           />
           <Button
             display="icon"
             icon={<IconPlus />}
-            label="Increment"
-            onClick={() => api.increment(1).toPromise()}
-            css={`
-              margin-left: ${2 * GU}px;
-            `}
+            label="voteFor"
+            onClick={() => api.voteFor(0,1).toPromise()}
           />
         </Buttons>
       </Box>

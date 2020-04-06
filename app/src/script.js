@@ -12,10 +12,8 @@ app.store(
 
     try {
       switch (event) {
-        case 'Increment':
-          return { ...nextState, count: await getValue() }
-        case 'Decrement':
-          return { ...nextState, count: await getValue() }
+        case 'Voted':
+          return { ...nextState, votes: await getVotes(0) }
         case events.SYNC_STATUS_SYNCING:
           return { ...nextState, isSyncing: true }
         case events.SYNC_STATUS_SYNCED:
@@ -42,11 +40,16 @@ function initializeState() {
   return async cachedState => {
     return {
       ...cachedState,
-      count: await getValue(),
+      count: await getArgumentsCount(),
+      votes: await getVotes(0),
     }
   }
 }
 
-async function getValue() {
-  return parseInt(await app.call('value').toPromise(), 10)
+async function getArgumentsCount() {
+  return parseInt(await app.call('argumentsCount').toPromise(), 10)
+}
+
+async function getVotes(id) {
+  return parseInt(await app.call('getVotes', id).toPromise(), 10)
 }

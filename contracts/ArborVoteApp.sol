@@ -1,14 +1,20 @@
-pragma solidity >=0.4.22 <0.7.0;
+pragma solidity ^0.4.24;
+
+import "@aragon/abis/os/contracts/apps/AragonApp.sol";
+import "@aragon/abis/os/contracts/lib/math/SafeMath.sol";
 
 
-contract Proposal {
-    uint8 public constant INITIALVOTETOKENS = 12;
-    uint8 argumentsCount;
+contract ArborVoteApp is AragonApp {
+    using SafeMath for uint256;
+    using SafeMath for uint8;
 
-    constructor (string memory _text) public{
+    /// State
+    uint8 public argumentsCount = 0;
+
+    function initialize(string memory _text) public onlyInit {
         arguments[0] = Argument({ // Argument 0 is the proposal itself
             supporting: true, // makes no sense for the proposal - just set to true
-           	votes: 0,
+            votes: 7,
             creator: msg.sender,
             ownId: 0,
             parentId: 0,
@@ -16,8 +22,10 @@ contract Proposal {
             numberOfChildren: 0,
             childVotes: 0,
             isFinalized: false
-            });
+        });
         argumentsCount = 1; // start counting at one
+
+        initialized();
     }
 
     //Each struct represents a node in tree
@@ -32,10 +40,13 @@ contract Proposal {
         uint numberOfChildren;
         int childVotes;  //child votes are zero or higher but we are keeping it int because it's easier
         bool isFinalized;
-
     }
     mapping ( uint8 => Argument ) public arguments;
     uint8 totalArgumentsCount = 0;
+
+    function getVotes(uint8 id) public view returns (int) {
+        return arguments[id].votes;
+    }
 
     function getText(uint8 id) public view returns (string memory) {
         return arguments[id].text;
@@ -71,9 +82,9 @@ contract Proposal {
         }
     }
 
-    
-    // Finalizes the argument tree up to the largest possible node. 
-    // Finalization requires all childs nodes to be finalized. 
+
+    // Finalizes the argument tree up to the largest possible node.
+    // Finalization requires all childs nodes to be finalized.
     // The finalize method can only be called from leafs (numberOfChildren == 0) to ensure traversal from the bottom to the top.
     function finalize(uint8 i, int childVotes) internal {
 
@@ -100,6 +111,9 @@ contract Proposal {
     }
 
     /********** VOTING RELATED ************/
+
+    uint8 public constant INITIALVOTETOKENS = 12;
+
     struct Voter {
         uint8 voteTokens;
         bool joined;
@@ -124,15 +138,33 @@ contract Proposal {
         return voteStrength*voteStrength;
     }
 
-    function voteFor(uint8 i, uint8 voteStrength) public {
+    /// Events
+    event Voted(address indexed entity, uint8 argumentId, uint8 voteStrength);
+
+    /// ACL
+    bytes32 constant public VOTE_ROLE = keccak256("VOTE_ROLE");
+
+    /**
+     * @notice Vote for argument `id` with vote strength `voteStrength`
+     * @param id ID of the argument to vote for
+     */
+    function voteFor(uint8 id, uint8 voteStrength) external auth(VOTE_ROLE) {
+        require(voters[msg.sender].joined == true, "Voter must join first");
         uint8 cost = quadraticCost(voteStrength);
         payForVote(msg.sender, cost);
-        arguments[i].votes += voteStrength;
+        arguments[id].votes += voteStrength;
+        emit Voted(msg.sender, id, voteStrength);
     }
 
-    function voteAgainst(uint8 i, uint8 voteStrength) public {
+    /**
+     * @notice Vote against argument `id` with vote strength `voteStrength`
+     * @param id ID of the argument to vote against
+     */
+    function voteAgainst(uint8 id, uint8 voteStrength) external auth(VOTE_ROLE) {
+        require(voters[msg.sender].joined == true, "Voter must join first");
         uint8 cost = quadraticCost(voteStrength);
         payForVote(msg.sender, cost);
-        arguments[i].votes -= voteStrength;
+        arguments[id].votes -= voteStrength;
+        emit Voted(msg.sender, id, voteStrength);
     }
 }
