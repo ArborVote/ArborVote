@@ -28,8 +28,5 @@ This gap can be filled with blockchain technology by
 Argument-based decision-making could be a useful building block in future DAOs.
 
 ### npm Scripts
-- **postinstall**: Runs after installing dependencies.
-- **build-app**: Installs front end project (app/) dependencies.
-- **start** Runs your app inside a DAO.
 - **compile**: Compiles the smart contracts.
 - **test**: Runs tests for the contracts.
