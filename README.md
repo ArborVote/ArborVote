@@ -25,42 +25,6 @@ This gap can be filled with blockchain technology by
 
 Argument-based decision-making could be a useful building block in future DAOs.
 
-## Algorithm Outline  (Work in Progress)
-### Creation Phase
-* A user creates a debate by creating a proposal is the root of a binary tree.
-* Users can create pro or con arguments.
-* Arguments can be nested.
-
-After creation (and editing) phase, the binary tree gets finalized. The voting phase begins.
-
-### Voting Phase
-* Voters have a limited number of votes and can (quadratically) vote on arguments.
-* Votes are cumulatively summed up from the bottom of the binary tree and determine the decision outcome
-* Special rule: Bad arguments with negative cumulative votes are counted with a weight of zero 
-(Rationale: Bad arguments can't influence the decision process and are sorted out on the lowest possible level.)
-
-![Example for the tree vote algorithm in ArborVote.](docs/ArborVote_VotingAlgorithm_Example.png)
-
-## Project Structure
-This project has the following structure:
-
-```md
-root
-├── app
-├ ├── src
-├ └── package.json
-├── contracts
-├ └── CounterApp.sol
-├── test
-├── arapp.json
-├── manifest.json
-├── buidler.config.js
-└── package.json
-```
-
-## Running the app
-To run the app in a browser with front end plus back end hot reloading, simply run `npm start`.
-
 ### npm Scripts
 - **postinstall**: Runs after installing dependencies.
 - **build-app**: Installs front end project (app/) dependencies.

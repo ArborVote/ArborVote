@@ -5,11 +5,9 @@ node_js:
 cache:
   directories:
     - node_modules
-    - app/.cache
-    - app/node_modules
+    - .cache
 install:
   - npm install
-  - npm run postinstall
 script:
   - npm run compile
   - npm run buidlerevm
