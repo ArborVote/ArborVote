@@ -2,7 +2,9 @@
 **Rational decision-making by quadratic voting on argument trees.**
 
 [![Build Status](https://travis-ci.org/Michael-A-Heuer/ArborVote.svg?branch=master)](https://travis-ci.org/Michael-A-Heuer/ArborVote)
+[![Coverage Status](https://coveralls.io/repos/github/Michael-A-Heuer/ArborVote/badge.svg?branch=master)](https://coveralls.io/github/Michael-A-Heuer/ArborVote?branch=master)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/Michael-A-Heuer/ArborVote/pulls)
+
 
 **ArborVote** is a tool for rational decision-making based on arguments.
 The key idea of this project is to stake/quadratic vote 🗳 on a binary tree 🌳 of pro and con arguments instead of directly voting for or against a decision.
