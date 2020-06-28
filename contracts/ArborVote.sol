@@ -1,17 +1,11 @@
-pragma solidity ^0.4.24;
-
-import "@aragon/abis/os/contracts/apps/AragonApp.sol";
-import "@aragon/abis/os/contracts/lib/math/SafeMath.sol";
+pragma solidity ^0.5.1;
 
 
-contract ArborVoteApp is AragonApp {
-    using SafeMath for uint256;
-    using SafeMath for uint8;
-
+contract ArborVote {
     /// State
     uint8 public argumentsCount = 0;
 
-    function initialize(string memory _text) public onlyInit {
+    function initialize(string memory _text) public {
         arguments[0] = Argument({ // Argument 0 is the proposal itself
             supporting: true, // makes no sense for the proposal - just set to true
             votes: 7,
@@ -24,8 +18,6 @@ contract ArborVoteApp is AragonApp {
             isFinalized: false
         });
         argumentsCount = 1; // start counting at one
-
-        initialized();
     }
 
     //Each struct represents a node in tree
@@ -141,14 +133,12 @@ contract ArborVoteApp is AragonApp {
     /// Events
     event Voted(address indexed entity, uint8 argumentId, uint8 voteStrength);
 
-    /// ACL
-    bytes32 constant public VOTE_ROLE = keccak256("VOTE_ROLE");
 
     /**
      * @notice Vote for argument `id` with vote strength `voteStrength`
      * @param id ID of the argument to vote for
      */
-    function voteFor(uint8 id, uint8 voteStrength) external auth(VOTE_ROLE) {
+    function voteFor(uint8 id, uint8 voteStrength) public {
         require(voters[msg.sender].joined == true, "Voter must join first");
         uint8 cost = quadraticCost(voteStrength);
         payForVote(msg.sender, cost);
@@ -160,7 +150,7 @@ contract ArborVoteApp is AragonApp {
      * @notice Vote against argument `id` with vote strength `voteStrength`
      * @param id ID of the argument to vote against
      */
-    function voteAgainst(uint8 id, uint8 voteStrength) external auth(VOTE_ROLE) {
+    function voteAgainst(uint8 id, uint8 voteStrength) public {
         require(voters[msg.sender].joined == true, "Voter must join first");
         uint8 cost = quadraticCost(voteStrength);
         payForVote(msg.sender, cost);

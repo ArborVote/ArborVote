@@ -25,29 +25,6 @@ This gap can be filled with blockchain technology by
 
 Argument-based decision-making could be a useful building block in future DAOs.
 
-## Project Structure
-
-This project has the following structure:
-
-```md
-root
-├── app
-├ ├── src
-├ └── package.json
-├── contracts
-├ └── ArborVoteApp.sol
-├── test
-├── arapp.json
-├── manifest.json
-├── buidler.config.js
-└── package.json
-```
-
-## Running the app
-
-To run the app in a browser with front end plus back end hot reloading, simply run `npm start`.
-
-
 ### npm Scripts
 
 - **postinstall**: Runs after installing dependencies.
