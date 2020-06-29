@@ -1,11 +1,11 @@
-pragma solidity ^0.5.1;
-
+//SPDX-License-Identifier: MIT
+pragma solidity ^0.6.8;
 
 contract ArborVote {
     /// State
     uint8 public argumentsCount = 0;
 
-    function initialize(string memory _text) public {
+    constructor (string memory _text) public {
         arguments[0] = Argument({ // Argument 0 is the proposal itself
             supporting: true, // makes no sense for the proposal - just set to true
             votes: 0,
@@ -127,7 +127,7 @@ contract ArborVote {
         // quadratic voting
         require(voteStrength >= 1 && voteStrength <= 3, "Voting power can only range from 1 to 3");
 
-        return voteStrength*voteStrength;
+        return voteStrength * voteStrength;
     }
 
     /// Events
