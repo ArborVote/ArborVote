@@ -3,11 +3,11 @@
   "version": "0.0.1",
   "description": "Rational decision-making by quadratic voting on argument trees.",
   "repository": "https://github.com/Michael-A-Heuer/ArborVote",
+  "license": "MIT",
   "scripts": {
     "buidlerevm": "buidler node > /dev/null &",
     "stop": "sudo kill `sudo lsof -t -i:8545`",
     "compile": "buidler compile --force",
-    "start": "buidler start",
     "test": "buidler test --network buidlerevm",
     "coverage": "buidler coverage --network buidlerevm"
   },
