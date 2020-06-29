@@ -8,7 +8,7 @@ contract ArborVote {
     function initialize(string memory _text) public {
         arguments[0] = Argument({ // Argument 0 is the proposal itself
             supporting: true, // makes no sense for the proposal - just set to true
-            votes: 7,
+            votes: 0,
             creator: msg.sender,
             ownId: 0,
             parentId: 0,
