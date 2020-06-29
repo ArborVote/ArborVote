@@ -25,7 +25,7 @@ This gap can be filled with blockchain technology by
 * adding a **decentralized and quadratic voting system** and 
 * providing **economic incentives** for participation.
 
-Argument-based decision-making could be a useful building block in future DAOs.
+Argument-based decision-making could be a useful building block in future DApss and DAOs.
 
 ### npm Scripts
 - **compile**: Compiles the smart contracts.
