@@ -43,7 +43,6 @@ contract ArborVote {
         bool isFinalized;
     }
     mapping ( uint8 => Argument ) public arguments;
-    uint8 totalArgumentsCount = 0;
 
     function getVotes(uint8 id) public view returns (int) {
         return arguments[id].votes;
@@ -57,10 +56,8 @@ contract ArborVote {
         require(stage == Stage.Creation);
         require(argumentsCount <= uint8(255), "There can't be more than 255 subarguments.");
 
-        totalArgumentsCount++; //increment first because the proposal itself has index zero
-
         // Create a child node and add it to the mapping
-        arguments[totalArgumentsCount] = Argument({
+        arguments[argumentsCount] = Argument({
             supporting: _supporting,
             votes: 0,
             creator: msg.sender,
@@ -72,6 +69,8 @@ contract ArborVote {
             isFinalized: false
             }
         );
+        
+        argumentsCount++; //increment after because the proposal itself has index zero
 
         // change parent state accordingly
         arguments[_parentId].numberOfChildren++;
@@ -81,7 +80,7 @@ contract ArborVote {
     function finalizeLeafs() public  {
         require(stage == Stage.Process);
 
-        for (uint8 i = 0; i < totalArgumentsCount; i++) {
+        for (uint8 i = 0; i < argumentsCount; i++) {
             if(arguments[i].numberOfChildren == 0)
                 finalize(i,0);
         }
