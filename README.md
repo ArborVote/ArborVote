@@ -30,3 +30,6 @@ Argument-based decision-making could be a useful building block in future DApss 
 ### npm Scripts
 - **compile**: Compiles the smart contracts.
 - **test**: Runs tests for the contracts.
+
+***
+Copyright © 2020 Michael A. Heuer.
