@@ -54,7 +54,7 @@ contract ArborVote {
 
     function addArgument(uint8 _parentId, string memory _text, bool _supporting) public payable {
         require(stage == Stage.Creation);
-        require(argumentsCount <= uint8(255), "There can't be more than 255 subarguments.");
+        require(argumentsCount <= uint8(255), "There can't be more than 255 arguments.");
 
         // Create a child node and add it to the mapping
         arguments[argumentsCount] = Argument({
@@ -70,7 +70,7 @@ contract ArborVote {
             }
         );
         
-        argumentsCount++; //increment after because the proposal itself has index zero
+        argumentsCount++; //increment afterwards because the proposal itself has index zero
 
         // change parent state accordingly
         arguments[_parentId].numberOfChildren++;
@@ -157,6 +157,7 @@ contract ArborVote {
     function voteFor(uint8 id, uint8 voteStrength) public {
         require(stage == Stage.Voting);
         require(voters[msg.sender].joined == true, "Voter must join first");
+
         uint8 cost = quadraticCost(voteStrength);
         payForVote(msg.sender, cost);
         arguments[id].votes += voteStrength;
@@ -172,6 +173,7 @@ contract ArborVote {
     function voteAgainst(uint8 id, uint8 voteStrength) public {
         require(stage == Stage.Voting);
         require(voters[msg.sender].joined == true, "Voter must join first");
+
         uint8 cost = quadraticCost(voteStrength);
         payForVote(msg.sender, cost);
         arguments[id].votes -= voteStrength;
