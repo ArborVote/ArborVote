@@ -21,7 +21,7 @@ contract ArborVote {
     uint public votingStartTime;
     uint public countingStartTime;
 
-    uint constant stageDurationBaseValue = 10 minutes;
+    uint constant stageDurationBaseValue = 1 days;
 
     constructor (string memory _text) public {
         arguments[0] = Argument({ // Argument 0 is the proposal itself
