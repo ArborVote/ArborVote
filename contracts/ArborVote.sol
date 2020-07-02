@@ -87,13 +87,15 @@ contract ArborVote {
     }
 
 
-    // Finalizes the argument tree up to the largest possible node.
-    // Finalization requires all childs nodes to be finalized.
-    // The finalize method can only be called from leaves (numberOfChildren == 0) to ensure traversal from the bottom to the top.
+    /* Finalizes the argument tree up to the highest possible parent argument and stops.
+     * It stops, if the parent arguments contains children that haven't been finalized.
+     * The finalize method can only be called from leaves (numberOfChildren == 0) to ensure traversal from the bottom to the top.
+     */
     function finalize(uint8 i, int childVotes) internal {
 
         arguments[i].childVotes += childVotes;
-        arguments[i].numberOfChildren--;
+        arguments[i].numberOfChildren--; // Becomes 0 when all child subtrees have been finalized.
+        // The Argument is then equivalent to a leaf and its cumulative vote weight can be counted for the parent argument.
 
         if(arguments[i].ownId == 0) { // stop if argument 0 is reached.
             return;
