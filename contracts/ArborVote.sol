@@ -49,7 +49,7 @@ contract ArborVote {
         uint8 ownId;
         uint8 parentId;
         string text;
-        uint numberOfChildren;
+        uint8 numberOfChildren;
         int childVotes;  //child votes are zero or higher but we are keeping it int because it's easier
         bool isFinalized;
     }
