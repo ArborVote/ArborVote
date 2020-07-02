@@ -13,10 +13,6 @@ contract ArborVote {
     }
     Stage public stage = Stage.Init;
 
-    function getStage() public view returns (Stage) {
-        return stage;
-    }
-
     uint public debatingStartTime;
     uint public votingStartTime;
     uint public countingStartTime;
@@ -69,39 +65,6 @@ contract ArborVote {
     mapping ( uint8 => Argument ) public arguments;
 
     // Getters
-
-    function getIsFinalized(uint8 id) public view returns (bool) {
-        return arguments[id].isFinalized;
-    }
-
-    function getIsSupporting(uint8 id) public view returns (bool) {
-        return arguments[id].isSupporting;
-    }
-
-    function getParentId(uint8 id) public view returns (uint8) {
-        return arguments[id].parentId;
-    }
-
-    function getAccumulatedChildVotes(uint8 id) public view returns (int) {
-        return arguments[id].accumulatedChildVotes;
-    }
-
-    function getAccumulatedVotes(uint8 id) public view returns (int) {
-        return arguments[id].votes + arguments[id].accumulatedChildVotes;
-    }
-
-    function getVotes(uint8 id) public view returns (int) {
-        return arguments[id].votes;
-    }
-
-    function getText(uint8 id) public view returns (string memory) {
-        return arguments[id].text;
-    }
-
-    function getUnfinalizedChildCount(uint8 id) public view returns (uint8) {
-        return arguments[id].unfinalizedChildCount;
-    }
-
     function addArgument(uint8 _parentId, string memory _text, bool _supporting) public {
         updateStage();
         require(stage == Stage.Debating);
@@ -183,10 +146,6 @@ contract ArborVote {
         bool joined;
     }
     mapping (address => Voter) public voters;
-
-    function getJoined() public view returns (bool) {
-        return voters[msg.sender].joined;
-    }
 
     function getVoteTokens() public view returns (uint8) {
         return voters[msg.sender].voteTokens;
