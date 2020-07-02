@@ -63,7 +63,7 @@ contract ArborVote {
         return arguments[id].text;
     }
 
-    function addArgument(uint8 _parentId, string memory _text, bool _supporting) public payable {
+    function addArgument(uint8 _parentId, string memory _text, bool _supporting) public {
         require(stage == Stage.Debating);
         require(argumentsCount <= uint8(255), "There can't be more than 255 arguments.");
 
@@ -145,10 +145,10 @@ contract ArborVote {
         voters[msg.sender].joined = true;
         voters[msg.sender].voteTokens = INITIALVOTETOKENS;
 
-        if (now > votingStartTime)
-            stage = Stage.Voting;
-        else if (now > countingStartTime)
+        if (now > countingStartTime)
             stage = Stage.Counting;
+        else if (now > votingStartTime)
+            stage = Stage.Voting;
     }
 
     function payForVote(address voterAddr, uint8 cost) internal {
