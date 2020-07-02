@@ -55,12 +55,26 @@ contract ArborVote {
     }
     mapping ( uint8 => Argument ) public arguments;
 
+    // Getters
+
+    function getSupporting(uint8 id) public view returns (bool) {
+        return arguments[id].supporting;
+    }
+
+    function getParentId(uint8 id) public view returns (uint8) {
+        return arguments[id].parentId;
+    }
+
     function getVotes(uint8 id) public view returns (int) {
         return arguments[id].votes;
     }
 
     function getText(uint8 id) public view returns (string memory) {
         return arguments[id].text;
+    }
+
+    function getNumberOfChildren(uint8 id) public view returns (uint8) {
+        return arguments[id].numberOfChildren;
     }
 
     function addArgument(uint8 _parentId, string memory _text, bool _supporting) public {
