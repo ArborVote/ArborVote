@@ -2,15 +2,22 @@
 pragma solidity ^0.6.8;
 
 contract ArborVote {
-    /// State
+    // State
     uint8 public argumentsCount = 0;
 
-    uint constant creationStageDuration = 10 minutes;
-    uint constant votingStageDuration = 10 minutes;
-
-    uint public startTime;
-    enum Stage {Init, Creation, Voting, Process}
+    enum Stage {
+        Init,
+        Debating,
+        Voting,
+        Counting
+    }
     Stage public stage = Stage.Init;
+
+    uint public debatingStartTime;
+    uint public votingStartTime;
+    uint public countingStartTime;
+
+    uint constant stageDurationBaseValue = 10 minutes;
 
     constructor (string memory _text) public {
         arguments[0] = Argument({ // Argument 0 is the proposal itself
@@ -25,8 +32,12 @@ contract ArborVote {
             isFinalized: false
         });
         argumentsCount = 1; // start counting at one
-        stage = Stage.Creation;
-        startTime = now;
+
+        // Define the stage start times
+        stage = Stage.Debating;
+        debatingStartTime = now;
+        votingStartTime = now + stageDurationBaseValue;
+        countingStartTime = votingStartTime + stageDurationBaseValue;
     }
 
     //Each struct represents a node in tree
@@ -53,7 +64,7 @@ contract ArborVote {
     }
 
     function addArgument(uint8 _parentId, string memory _text, bool _supporting) public payable {
-        require(stage == Stage.Creation);
+        require(stage == Stage.Debating);
         require(argumentsCount <= uint8(255), "There can't be more than 255 arguments.");
 
         // Create a child node and add it to the mapping
@@ -74,11 +85,13 @@ contract ArborVote {
 
         // change parent state accordingly
         arguments[_parentId].numberOfChildren++;
-        if (now > (startTime+ creationStageDuration)) {stage = Stage.Voting; startTime = now;}
+
+        if (now > votingStartTime)
+            stage = Stage.Voting;
     }
 
     function finalizeLeaves() public  {
-        require(stage == Stage.Process);
+        require(stage == Stage.Counting);
 
         for (uint8 i = 0; i < argumentsCount; i++) {
             if(arguments[i].numberOfChildren == 0)
@@ -126,12 +139,16 @@ contract ArborVote {
     mapping (address => Voter) public voters;
 
     function join() external {
-        require(stage == Stage.Creation); //|| stage == Stage.Voting );
+        require(stage == Stage.Debating || stage == Stage.Voting );
+
         require(!voters[msg.sender].joined, "Joined already.");
         voters[msg.sender].joined = true;
         voters[msg.sender].voteTokens = INITIALVOTETOKENS;
 
-        if (now > (startTime+ creationStageDuration)) {stage = Stage.Voting; startTime = now;}
+        if (now > votingStartTime)
+            stage = Stage.Voting;
+        else if (now > countingStartTime)
+            stage = Stage.Counting;
     }
 
     function payForVote(address voterAddr, uint8 cost) internal {
@@ -163,7 +180,8 @@ contract ArborVote {
         arguments[id].votes += voteStrength;
         emit Voted(msg.sender, id, voteStrength);
 
-        if (now > (startTime+ votingStageDuration)) {stage = Stage.Process; startTime = now;}
+        if (now > countingStartTime)
+            stage = Stage.Counting;
     }
 
     /**
@@ -179,25 +197,21 @@ contract ArborVote {
         arguments[id].votes -= voteStrength;
         emit Voted(msg.sender, id, voteStrength);
 
-        if (now > (startTime+ votingStageDuration)) {stage = Stage.Process; startTime = now;}
+        if (now > countingStartTime)
+            stage = Stage.Counting;
     }
-
-
+    
     /**
      * @notice Advance the stage of debate. Remove method in Prod.
      */
     function advanceStage() public {
-        if (stage == Stage.Creation) {
+        if (stage == Stage.Debating) {
             stage = Stage.Voting;
-            startTime = now;
-            return;
+            votingStartTime = now;
         }
-        if (stage == Stage.Voting) {
-            stage = Stage.Process;
-            startTime = now;
-            return;
+        else if (stage == Stage.Voting) {
+            stage = Stage.Counting;
+            countingStartTime = now;
         }
-        return;
     }
-
 }
