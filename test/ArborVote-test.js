@@ -37,7 +37,7 @@ describe("constructor", async function () {
   });
 
   it('should set the stage to "Debating"', async function () {
-    expect(await arborVote.stage()).to.equal(1);
+    expect(await arborVote.currentStage()).to.equal(1);
   });
 });
 
@@ -90,7 +90,7 @@ describe("vote", async function () {
     };
 
     await arborVote.advanceStage();
-    expect(await arborVote.stage()).to.equal(2);
+    expect(await arborVote.currentStage()).to.equal(2);
 
     // vote on arg 1 (id=1)
     await voteAndCheckHelper(1, 2).catch(function (err) {
@@ -118,11 +118,11 @@ describe("vote", async function () {
   });
 });
 
-describe("finalizeLeaves", function () {
+describe("finalizeLeaves", async function () {
 
   it("should finalize the arguments.", async function () {
     await arborVote.advanceStage();
-    expect(await arborVote.stage()).to.equal(3);
+    expect(await arborVote.currentStage()).to.equal(3);
 
     await arborVote.finalizeLeaves();
 

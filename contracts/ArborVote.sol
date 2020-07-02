@@ -11,7 +11,7 @@ contract ArborVote {
         Voting,
         Counting
     }
-    Stage public stage = Stage.Init;
+    Stage public currentStage = Stage.Init;
 
     uint public debatingStartTime;
     uint public votingStartTime;
@@ -34,7 +34,7 @@ contract ArborVote {
         argumentsCount = 1; // start counting at one
 
         // Define the stage start times
-        stage = Stage.Debating;
+        currentStage = Stage.Debating;
         debatingStartTime = now;
         votingStartTime = now + stageDurationBaseValue;
         countingStartTime = votingStartTime + stageDurationBaseValue;
@@ -42,11 +42,25 @@ contract ArborVote {
 
     function updateStage() public {
         if (now > countingStartTime)
-            stage = Stage.Counting;
-        else if (now > votingStartTime)
-            stage = Stage.Voting;
-        else if (now > debatingStartTime)
-            stage = Stage.Debating;
+            currentStage = Stage.Counting;
+        else if (now > votingStartTime && currentStage < Stage.Voting) // prevents going back
+            currentStage = Stage.Voting;
+        else if (now > debatingStartTime && currentStage < Stage.Debating)
+            currentStage = Stage.Debating;
+    }
+
+    /**
+     * @notice Advance the stage of debate. Remove method in Production.
+     */
+    function advanceStage() public {
+        if (currentStage == Stage.Debating) {
+            votingStartTime = now;
+            currentStage = Stage.Voting;
+        }
+        else if (currentStage == Stage.Voting) {
+            countingStartTime = now;
+            currentStage = Stage.Counting;
+        }
     }
 
     //Each struct represents a node in tree
@@ -67,7 +81,7 @@ contract ArborVote {
     // Getters
     function addArgument(uint8 _parentId, string memory _text, bool _supporting) public {
         updateStage();
-        require(stage == Stage.Debating);
+        require(currentStage == Stage.Debating);
         require(argumentsCount <= uint8(255), "There can't be more than 255 arguments.");
 
         // Create a child node and add it to the mapping
@@ -90,12 +104,12 @@ contract ArborVote {
         arguments[_parentId].unfinalizedChildCount++;
 
         if (now > votingStartTime)
-            stage = Stage.Voting;
+            currentStage = Stage.Voting;
     }
 
     function finalizeLeaves() public  {
         updateStage();
-        require(stage == Stage.Counting);
+        require(currentStage == Stage.Counting);
 
         for (uint8 i = 0; i < argumentsCount; i++) {
             if(arguments[i].unfinalizedChildCount == 0)
@@ -153,7 +167,7 @@ contract ArborVote {
 
     function join() external {
         updateStage();
-        require(stage == Stage.Debating || stage == Stage.Voting );
+        require(currentStage == Stage.Debating || currentStage == Stage.Voting );
 
         require(!voters[msg.sender].joined, "Joined already.");
         voters[msg.sender].joined = true;
@@ -177,7 +191,7 @@ contract ArborVote {
 
     function prepareVotum(uint8 id, uint8 voteStrength) internal {
         require(id != 0, "Voting directly on the root argument is prohibited.");
-        require(stage == Stage.Voting);
+        require(currentStage == Stage.Voting);
         require(voters[msg.sender].joined == true, "Voter must join first");
 
         // pay
@@ -205,19 +219,5 @@ contract ArborVote {
         prepareVotum(id, voteStrength);
         arguments[id].votes -= voteStrength;
         emit Voted(msg.sender, id, voteStrength);
-    }
-    
-    /**
-     * @notice Advance the stage of debate. Remove method in Prod.
-     */
-    function advanceStage() public {
-        if (stage == Stage.Debating) {
-            votingStartTime = now;
-            stage = Stage.Voting;
-        }
-        else if (stage == Stage.Voting) {
-            countingStartTime = now;
-            stage = Stage.Counting;
-        }
     }
 }
