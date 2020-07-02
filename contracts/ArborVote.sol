@@ -49,11 +49,21 @@ contract ArborVote {
         uint8 ownId;
         uint8 parentId;
         string text;
-        uint numberOfChildren;
+        uint8 numberOfChildren;
         int childVotes;  //child votes are zero or higher but we are keeping it int because it's easier
         bool isFinalized;
     }
     mapping ( uint8 => Argument ) public arguments;
+
+    // Getters
+
+    function getSupporting(uint8 id) public view returns (bool) {
+        return arguments[id].supporting;
+    }
+
+    function getParentId(uint8 id) public view returns (uint8) {
+        return arguments[id].parentId;
+    }
 
     function getVotes(uint8 id) public view returns (int) {
         return arguments[id].votes;
@@ -61,6 +71,10 @@ contract ArborVote {
 
     function getText(uint8 id) public view returns (string memory) {
         return arguments[id].text;
+    }
+
+    function getNumberOfChildren(uint8 id) public view returns (uint8) {
+        return arguments[id].numberOfChildren;
     }
 
     function addArgument(uint8 _parentId, string memory _text, bool _supporting) public {
