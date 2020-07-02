@@ -22,12 +22,6 @@ task("accounts", "Prints the list of accounts", async () => {
 // defaultNetwork, networks, solc, and paths.
 // Go to https://buidler.dev/config/ to learn more
 module.exports = {
-  defaultNetwork: 'localhost',
-  networks: {
-    localhost: {
-      url: 'http://localhost:8545'
-    },
-  },
   solc: {
     version: '0.6.8',
     optimizer: {
@@ -35,8 +29,14 @@ module.exports = {
       runs: 10000
     }
   },
-  coverage: {
-    url: 'http://localhost:8555'
+  defaultNetwork: 'buidlerevm',
+  networks: {
+    localhost: {
+      url: 'http://localhost:8545'
+    },
+    coverage: {
+      url: 'http://localhost:8555'
+    },
   },
   gasReporter: {
     currency: 'EUR'
