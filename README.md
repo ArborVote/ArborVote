@@ -7,7 +7,7 @@
 
 
 **ArborVote** is a tool for rational decision-making based on arguments.
-The key idea of this project is to stake/quadratic vote 🗳 on a binary tree 🌳 of pro and con arguments instead of directly voting for or against a decision.
+The key idea of this project is to stake/quadratic vote 🗳 on a tree 🌳 of pro and con arguments instead of directly voting for or against a decision.
 In the end, the cumulative weight of the arguments summed from the branches to the root of the tree determines the decision.
 Governance forms  based on arguments are not new and known under the term [deliberative democracy](https://en.wikipedia.org/wiki/Deliberative_democracy).
 
@@ -25,7 +25,7 @@ This gap can be filled with blockchain technology by
 * adding a **decentralized and quadratic voting system** and 
 * providing **economic incentives** for participation.
 
-Argument-based decision-making could be a useful building block in future DApss and DAOs.
+Argument-based decision-making could be a useful building block in future DApps and DAOs.
 
 ### npm Scripts
 - **compile**: Compiles the smart contracts.

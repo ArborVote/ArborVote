@@ -77,7 +77,7 @@ contract ArborVote {
         if (now > (startTime+ creationStageDuration)) {stage = Stage.Voting; startTime = now;}
     }
 
-    function finalizeLeafs() public  {
+    function finalizeLeaves() public  {
         require(stage == Stage.Process);
 
         for (uint8 i = 0; i < argumentsCount; i++) {
@@ -89,7 +89,7 @@ contract ArborVote {
 
     // Finalizes the argument tree up to the largest possible node.
     // Finalization requires all childs nodes to be finalized.
-    // The finalize method can only be called from leafs (numberOfChildren == 0) to ensure traversal from the bottom to the top.
+    // The finalize method can only be called from leaves (numberOfChildren == 0) to ensure traversal from the bottom to the top.
     function finalize(uint8 i, int childVotes) internal {
 
         arguments[i].childVotes += childVotes;
