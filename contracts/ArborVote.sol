@@ -8,7 +8,7 @@ contract ArborVote {
     uint constant creationStageDuration = 10 minutes;
     uint constant votingStageDuration = 10 minutes;
 
-    uint startTime;
+    uint public startTime;
     enum Stage {Init, Creation, Voting, Process}
     Stage public stage = Stage.Init;
 
@@ -92,24 +92,23 @@ contract ArborVote {
     // The finalize method can only be called from leafs (numberOfChildren == 0) to ensure traversal from the bottom to the top.
     function finalize(uint8 i, int childVotes) internal {
 
-        Argument memory argument = arguments[i];
-        argument.childVotes += childVotes;
-        argument.numberOfChildren--;
+        arguments[i].childVotes += childVotes;
+        arguments[i].numberOfChildren--;
 
-        if(argument.ownId == 0) { // stop if argument 0 is reached.
+        if(arguments[i].ownId == 0) { // stop if argument 0 is reached.
             return;
-        } else if(argument.numberOfChildren == 0) { // all children were removed due to finalization
-            argument.isFinalized = true;
-            int accumulatedVotes = argument.votes+int(childVotes);
+        } else if(arguments[i].numberOfChildren == 0) { // all children were removed due to finalization
+            arguments[i].isFinalized = true;
+            int accumulatedVotes = arguments[i].votes+int(childVotes);
 
             if(accumulatedVotes > 0) { // argument is better than neutral
-                if(argument.supporting){
+                if(arguments[i].supporting){
                     finalize(arguments[i].parentId, accumulatedVotes);
                 } else {
                     finalize(arguments[i].parentId, -accumulatedVotes);
                 }
             } else { // Don't count bad arguments
-                finalize(argument.parentId, 0);
+                finalize(arguments[i].parentId, 0);
             }
         }
     }
@@ -178,4 +177,23 @@ contract ArborVote {
 
         if (now > (startTime+ votingStageDuration)) {stage = Stage.Process; startTime = now;}
     }
+
+
+    /**
+     * @notice Advance the stage of debate. Remove method in Prod.
+     */
+    function advanceStage() public {
+        if (stage == Stage.Creation) {
+            stage = Stage.Voting;
+            startTime = now;
+            return;
+        }
+        if (stage == Stage.Voting) {
+            stage = Stage.Process;
+            startTime = now;
+            return;
+        }
+        return;
+    }
+
 }
