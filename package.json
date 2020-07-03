@@ -1,6 +1,6 @@
 {
   "name": "ArborVote",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Rational decision-making by quadratic voting on argument trees.",
   "repository": "https://github.com/Michael-A-Heuer/ArborVote",
   "license": "MIT",
