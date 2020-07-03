@@ -8,11 +8,10 @@ export const contractActions = {
     getArgumentsCount,
     getStartTime,
     getStage,
+    getStageDuration,
     advanceStage,
-    getVotes,
     getArgument,
     getVoter,
-    getText,
     getAllArguments,
     addArgument,
     finalizeLeaves,
@@ -70,6 +69,24 @@ function getStage() {
     };
 }
 
+function getStageDuration() {
+    return async (dispatch, getState) => {
+        dispatch(started());
+        let stageDuration;
+        try {
+            const { account, contract } = getState().web3;
+            stageDuration = await contractService.getStageDuration(contract, account);
+        } catch (e) {
+            console.log(e);
+            dispatch(failure(e));
+            dispatch(alertActions.error("Error Getting Arguments Count"));
+            return;
+        }
+        dispatch(result({ data: { stageDuration } }));
+        return stageDuration;
+    };
+}
+
 function advanceStage() {
     return async (dispatch, getState) => {
         dispatch(started());
@@ -101,9 +118,11 @@ function getStartTime() {
         let startTime;
         try {
             const { account, contract } = getState().web3;
+            const { data: { stage } } = getState().contract;
             startTime = await contractService.getStartTime(
                 contract,
-                account
+                account,
+                stage
             );
         } catch (e) {
             console.log(e);
@@ -174,46 +193,6 @@ function getArgument(argumentId) {
         }
         dispatch(result({ data: { argument } }));
         return argument;
-    };
-}
-
-function getVotes(argumentId) {
-    return async (dispatch, getState) => {
-        dispatch(started());
-        let votes;
-        try {
-            const { account, contract } = getState().web3;
-            votes = await contractService.getVotes(
-                contract,
-                account,
-                argumentId
-            );
-        } catch (e) {
-            console.log(e);
-            dispatch(failure(e));
-            dispatch(alertActions.error("Error Getting Votes"));
-            return;
-        }
-        dispatch(result({ data: { votes } }));
-        return votes;
-    };
-}
-
-function getText(argumentId) {
-    return async (dispatch, getState) => {
-        dispatch(started());
-        let text;
-        try {
-            const { account, contract } = getState().web3;
-            text = await contractService.getText(contract, account, argumentId);
-        } catch (e) {
-            console.log(e);
-            dispatch(failure(e));
-            dispatch(alertActions.error("Error Getting Votes"));
-            return;
-        }
-        dispatch(result({ data: { text } }));
-        return text;
     };
 }
 

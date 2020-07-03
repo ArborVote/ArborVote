@@ -23,7 +23,7 @@ function treeDataFrom(list) {
         newList[i] = {};
         newList[i].id = i;
         newList[i].rootPath = rootPath(i, list);
-        newList[i].supporting = list[i].supporting;
+        newList[i].isSupporting = list[i].isSupporting;
         newList[i].attributes = {
             // childVotes: list[i].childVotes,
             // creator: list[i].creator,
@@ -31,7 +31,7 @@ function treeDataFrom(list) {
             // numberOfChildren: list[i].numberOfChildren,
             // ownId: list[i].ownId,
             // parentId: list[i].parentId,
-            // supporting: list[i].supporting,
+            // isSupporting: list[i].isSupporting,
             // text: list[i].text,
             // votes: list[i].votes
         };
@@ -90,10 +90,10 @@ class ArgumentExplorer extends React.Component {
             return null;
         }
         const proNodes = selected.children.filter(
-            node => allArguments[node.id].supporting
+            node => allArguments[node.id].isSupporting
         );
         const conNodes = selected.children.filter(
-            node => !allArguments[node.id].supporting
+            node => !allArguments[node.id].isSupporting
         );
 
         return (

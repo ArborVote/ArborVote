@@ -11,11 +11,13 @@ const getStageString = num => {
         case 0:
             return "INIT";
         case 1:
-            return "CREATION";
+            return "DEBATING";
         case 2:
             return "VOTING";
         case 3:
-            return "PROCESS";
+            return "COUNTING";
+        case 4:
+            return "DONE";
         default:
             return "";
     }
@@ -23,11 +25,13 @@ const getStageString = num => {
 
 const getRemainingTime = startTime => {
     const now = new Date();
-    const tenMin = 10 * 60 * 1000;
-    const endTime = new Date(startTime * 1000 + tenMin);
+    const oneDays = 24 * 60 * 60 * 1000;
+    const endTime = new Date(startTime * 1000 + oneDays);
+    console.log({now, endTime});
     const diffMillis = endTime - now;
+    const diffHours = Math.round(diffMillis / (1000 * 60 * 60));
     const diffMins = Math.round(((diffMillis % 86400000) % 3600000) / 60000);
-    return diffMins + " min";
+    return diffHours + " hrs " + diffMins + " mins";
 };
 
 class StatusBar extends React.Component {
@@ -81,8 +85,9 @@ class StatusBar extends React.Component {
                                     `Current stage: ${getStageString(stage)}`}
                             </p>
                             <p>
-                                {startTime && stage < 3 && 
-                                    `Remaining time: ${getRemainingTime(
+                                {startTime &&
+                                    stage < 3 && 
+                                    `Remaining: ${getRemainingTime(
                                         startTime
                                     )}`}
                             </p>
