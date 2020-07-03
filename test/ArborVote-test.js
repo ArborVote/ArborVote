@@ -1,5 +1,5 @@
-const { expect } = require("chai");
-const { utils } = require('ethers').utils;
+const {expect} = require("chai");
+const {utils} = require('ethers').utils;
 
 let arborVote;
 
@@ -10,7 +10,6 @@ before(async function () {
 
   // join
   await arborVote.join();
-  expect(await arborVote.getVoteTokens()).to.equal(12);
 
   // Layer 1
   await arborVote.addArgument(0, "1", true); // id 1
@@ -25,115 +24,128 @@ before(async function () {
   await arborVote.addArgument(3, "1.1.1", true); // id 6
 });
 
-describe("Constructor", function() {
-  it("should return the root thesis after the constructor was executed.", async function() {
-    expect(await arborVote.getText(0)).to.equal("Trees are great!");
+describe("Initial vote tokens", function () {
+  it('should be 12', async function () {
+    expect(await arborVote.INITIALVOTETOKENS()).to.equal(12);
+  });
+});
+
+describe("constructor", async function () {
+  it("should return the root thesis after the constructor was executed.", async function () {
+    const root = await arborVote.arguments(0);
+    expect(await root.text).to.equal("Trees are great!");
   });
 
   it('should set the stage to "Debating"', async function () {
-    expect(await arborVote.getStage()).to.equal(1);
+    expect(await arborVote.currentStage()).to.equal(1);
   });
 });
 
-describe("addArgument", function() {
-  it("should assign the argument ids.", async function() {
-    expect(await arborVote.getText(1)).to.equal("1");
-    expect(await arborVote.getText(2)).to.equal("2");
-    expect(await arborVote.getText(3)).to.equal("1.1");
-    expect(await arborVote.getText(4)).to.equal("1.2");
-    expect(await arborVote.getText(5)).to.equal("2.1");
-    expect(await arborVote.getText(6)).to.equal("1.1.1");
+describe("addArgument", async function () {
+
+  it("should assign the argument ids.", async function () {
+    for (let arr of [[1, "1"], [2, "2"], [3, "1.1"], [4, "1.2"], [5, "2.1"], [6, "1.1.1"]]) {
+      let id = arr[0], expected = arr[1];
+      const arg = await arborVote.arguments(id);
+      expect(arg.text).to.equal(expected);
+    }
   });
 
-  it("should display arguments as pro and con arguments.", async function() {
-    expect(await arborVote.getIsSupporting(1)).to.equal(true);
-    expect(await arborVote.getIsSupporting(2)).to.equal(false);
-    expect(await arborVote.getIsSupporting(3)).to.equal(true);
-    expect(await arborVote.getIsSupporting(4)).to.equal(false);
-    expect(await arborVote.getIsSupporting(5)).to.equal(true);
-    expect(await arborVote.getIsSupporting(6)).to.equal(true);
+  it("should display arguments as pro and con arguments.", async function () {
+
+    for (let arr of [[1, true], [2, false], [3, true], [4, false], [5, true], [6, true]]) {
+      let id = arr[0], expected = arr[1];
+      const arg = await arborVote.arguments(id);
+      expect(arg.isSupporting).to.equal(expected);
+    }
   });
 
-  it("should return the number of children.", async function() {
-    expect(await arborVote.getUnfinalizedChildCount(0)).to.equal(2);
-    expect(await arborVote.getUnfinalizedChildCount(1)).to.equal(2);
-    expect(await arborVote.getUnfinalizedChildCount(2)).to.equal(1);
-    expect(await arborVote.getUnfinalizedChildCount(3)).to.equal(1);
-    expect(await arborVote.getUnfinalizedChildCount(4)).to.equal(0);
-    expect(await arborVote.getUnfinalizedChildCount(5)).to.equal(0);
-    expect(await arborVote.getUnfinalizedChildCount(6)).to.equal(0);
+  it("should return the number of children.", async function () {
+    for (let arr of [[0, 2], [1, 2], [2, 1], [3, 1], [4, 0], [5, 0], [6, 0]]) {
+      let id = arr[0], expected = arr[1];
+      const arg = await arborVote.arguments(id);
+      expect(arg.unfinalizedChildCount).to.equal(expected);
+    }
   });
 });
 
-describe("vote", function() {
-  it("should change the number of votes and vote tokens left.", async function() {
+
+describe("vote", async function () {
+  it("should change the number of votes and vote tokens left.", async function () {
+
+    const voteAndCheckHelper = async function checkVote(id, voteStrength) {
+      const voteTokensBefore = await arborVote.getVoteTokens();
+      let arg = await arborVote.arguments(id);
+      const argumentVotesBefore = await arg.votes;
+
+      if(voteStrength >= 0)
+        await arborVote.voteFor(id, voteStrength);
+      else
+        await arborVote.voteAgainst(id, Math.abs(voteStrength));
+
+      expect(await arborVote.getVoteTokens()).to.equal(Number(voteTokensBefore) - Math.pow(voteStrength, 2));
+
+      arg = await arborVote.arguments(id);
+      expect(arg.votes).to.equal(Number(argumentVotesBefore) + voteStrength);
+    };
+
     await arborVote.advanceStage();
-    expect(await arborVote.getStage()).to.equal(2);
+    expect(await arborVote.currentStage()).to.equal(2);
 
-    // vote on arg 1
-    expect(await arborVote.getVotes(1)).to.equal(0);
-    await arborVote.voteFor(1, 2);
-    expect(await arborVote.getVoteTokens()).to.equal(8);
-    expect(await arborVote.getVotes(1)).to.equal(2);
+    // vote on arg 1 (id=1)
+    await voteAndCheckHelper(1, 2).catch(function (err) {
+      console.log(err);
+    });
 
-    // vote on arg 2
-    expect(await arborVote.getVotes(2)).to.equal(0);
-    await arborVote.voteFor(2, 2);
-    expect(await arborVote.getVoteTokens()).to.equal(4);
-    expect(await arborVote.getVotes(2)).to.equal(2);
+    // vote on arg 2 (id=2)
+    await voteAndCheckHelper(2, 2).catch(function (err) {
+      console.log(err);
+    });
 
-    await arborVote.voteAgainst(2, 1);
-    expect(await arborVote.getVoteTokens()).to.equal(3);
-    expect(await arborVote.getVotes(2)).to.equal(1);
+    await voteAndCheckHelper(2, -1).catch(function (err) {
+      console.log(err);
+    });
 
-    // vote on arg 1.1
-    expect(await arborVote.getVotes(3)).to.equal(0);
-    await arborVote.voteFor(3, 1);
-    expect(await arborVote.getVoteTokens()).to.equal(2);
-    expect(await arborVote.getVotes(2)).to.equal(1);
+    // vote on arg 1.1 (id=3)
+    await voteAndCheckHelper(3, 1).catch(function (err) {
+      console.log(err);
+    });
 
-    // vote on arg 1.1.1
-    expect(await arborVote.getVotes(6)).to.equal(0);
-    await arborVote.voteAgainst(6, 1);
-    expect(await arborVote.getVoteTokens()).to.equal(1);
-    expect(await arborVote.getVotes(6)).to.equal(-1); // => bad argument, cumulative vote weight is 0
+    // vote on arg 1.1.1 (id=6)
+    await voteAndCheckHelper(6, -1).catch(function (err) {
+      console.log(err);
+    });
   });
 });
 
-describe("finalizeLeaves", function() {
-  it("should finalize the arguments.", async function() {
+describe("finalizeLeaves", async function () {
+
+  it("should finalize the arguments.", async function () {
     await arborVote.advanceStage();
-    expect(await arborVote.getStage()).to.equal(3);
+    expect(await arborVote.currentStage()).to.equal(3);
 
     await arborVote.finalizeLeaves();
 
-    expect(await arborVote.getIsFinalized(6)).to.equal(true);
-    expect(await arborVote.getIsFinalized(5)).to.equal(true);
-    expect(await arborVote.getIsFinalized(4)).to.equal(true);
-    expect(await arborVote.getIsFinalized(3)).to.equal(true);
-    expect(await arborVote.getIsFinalized(2)).to.equal(true);
-    expect(await arborVote.getIsFinalized(1)).to.equal(true);
-    expect(await arborVote.getIsFinalized(0)).to.equal(true);
+    for (let id of [6, 5, 4, 3, 2, 1]) {
+      const arg = await arborVote.arguments(id);
+      expect(arg.isFinalized).to.equal(true);
+    }
   });
 
-
-  it("should accumulate the child votes correctly.", async function() {
-    expect(await arborVote.getAccumulatedChildVotes(6)).to.equal(0);
-    expect(await arborVote.getAccumulatedChildVotes(5)).to.equal(0);
-    expect(await arborVote.getAccumulatedChildVotes(4)).to.equal(0);
-    expect(await arborVote.getAccumulatedChildVotes(3)).to.equal(0); // Arg 1.1.1 is a bad argument and returns 0
-    expect(await arborVote.getAccumulatedChildVotes(2)).to.equal(0);
-    expect(await arborVote.getAccumulatedChildVotes(1)).to.equal(1);
-    expect(await arborVote.getAccumulatedChildVotes(0)).to.equal(2);
+  it("should accumulate the child votes correctly.", async function () {
+    // Arg 1.1.1 (id=6) is a bad argument and results in Arg 1.1 (id=3) having 0 accumulated child votes
+    for (let arr of [[6, 0], [5, 0], [4, 0], [3, 0], [2, 0], [1, 1], [0, 2]]) {
+      const id = arr[0], expected = arr[1];
+      const arg = await arborVote.arguments(id);
+      expect(arg.accumulatedChildVotes).to.equal(expected);
+    }
   });
 
-  it("should accumulate the votes correctly.", async function() {
-    expect(await arborVote.getAccumulatedVotes(6)).to.equal(-1);
-    expect(await arborVote.getAccumulatedVotes(5)).to.equal(0);
-    expect(await arborVote.getAccumulatedVotes(4)).to.equal(0);
-    expect(await arborVote.getAccumulatedVotes(3)).to.equal(1); // Arg 1.1.1 is a bad argument and returns 0
-    expect(await arborVote.getAccumulatedVotes(2)).to.equal(1);
-    expect(await arborVote.getAccumulatedVotes(1)).to.equal(3);
-    expect(await arborVote.getAccumulatedVotes(0)).to.equal(2);
+  it("should accumulate the votes correctly.", async function () {
+    for (let arr of [[6, -1], [5, 0], [4, 0], [3, 1], [2, 1], [1, 3], [0, 2]]) {
+      const id = arr[0], expected = arr[1];
+      const arg = await arborVote.arguments(id);
+      expect(Number(await arg.votes) + Number(await arg.accumulatedChildVotes)).to.equal(expected);
+    }
   });
 });

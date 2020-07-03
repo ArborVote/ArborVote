@@ -13,5 +13,5 @@ script:
   - npm run buidlerevm
   - sleep 5
   - npm run test
-  #- npm run coverage && cat coverage/lcov.info | coveralls
+  - npm run coverage && cat coverage/lcov.info | coveralls
   - npm run stop
