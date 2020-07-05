@@ -1,3 +1,3 @@
 module.exports = {
-  skipFiles: [SafeMath.sol]
+  skipFiles: ['SafeMath.sol']
 };
