@@ -1,9 +1,9 @@
 # 🌳 ArborVote 🗳
 **Rational decision-making by quadratic voting on argument trees.**
 
-[![Build Status](https://travis-ci.org/Michael-A-Heuer/ArborVote.svg?branch=master)](https://travis-ci.org/Michael-A-Heuer/ArborVote)
-[![Coverage Status](https://coveralls.io/repos/github/Michael-A-Heuer/ArborVote/badge.svg?branch=master)](https://coveralls.io/github/Michael-A-Heuer/ArborVote?branch=master)
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/Michael-A-Heuer/ArborVote/pulls)
+[![Build Status](https://travis-ci.org/ArborVote/ArborVote.svg?branch=master)](https://travis-ci.org/ArborVote/ArborVote)
+[![Coverage Status](https://coveralls.io/repos/github/ArborVote/ArborVote/badge.svg?branch=master)](https://coveralls.io/github/ArborVote/ArborVote?branch=master)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/ArborVote/ArborVote/pulls)
 
 
 **ArborVote** is a tool for rational decision-making based on arguments.
@@ -18,7 +18,7 @@ A centralized platform ([kialo.com](https://www.kialo.com)) overcame this issue 
 * allowing for **fast onboarding of participants** 
 
 ([see an exemplary debate](https://www.kialo.com/humans-should-act-to-fight-climate-change-4540)). 
-Participants create a binary tree of pro and con arguments and can express preference by voting on them.
+Participants create a tree of pro and con arguments and can express preference by voting on them.
 Still, the platform is not designed for actual voting because it lacks resilience against manipulation and sybil attacks.
 
 This gap can be filled with blockchain technology by
