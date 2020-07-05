@@ -1,0 +1,82 @@
+@import "config";
+
+.argumentExploer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.argumentTree {
+    width: 100%;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    font-size: 1.5rem;
+    .box {
+        cursor: pointer;
+        margin: 0.2rem;
+        &.pro {
+            color: $green;
+            outline: $green;
+        }
+        &.con {
+            color: $red;
+            outline: $red;
+        }
+        &.filled{
+            color: $blue2;
+        }
+    }
+    .level {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.argumentNode {
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    p {
+        margin: 0;
+        padding: 0;
+        wrap-text: break-all;
+    }
+    color: $white;
+    &.pro {
+        background: $green;
+    }
+    &.con {
+        background: $red;
+    }
+    &.root {
+        background: $blue2;
+    }
+    &:hover {
+        outline: solid 1px black;
+    }
+    .hasChildren {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+}
+
+.argumentList {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0.5rem;
+}
+
+.argumentListColumn {
+    display: flex;
+    flex-direction: column;
+}

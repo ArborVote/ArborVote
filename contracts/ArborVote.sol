@@ -2,102 +2,153 @@
 pragma solidity ^0.6.8;
 
 contract ArborVote {
-    /// State
+    // State
     uint8 public argumentsCount = 0;
+
+    enum Stage {
+        Init,
+        Debating,
+        Voting,
+        Counting,
+        Done
+    }
+    Stage public currentStage = Stage.Init;
+
+    uint public debatingStartTime;
+    uint public votingStartTime;
+    uint public countingStartTime;
+
+    uint constant stageDurationBaseValue = 1 days;
 
     constructor (string memory _text) public {
         arguments[0] = Argument({ // Argument 0 is the proposal itself
-            supporting: true, // makes no sense for the proposal - just set to true
+            isSupporting: true, // makes no sense for the proposal - just set to true
             votes: 0,
             creator: msg.sender,
             ownId: 0,
             parentId: 0,
             text: _text,
-            numberOfChildren: 0,
-            childVotes: 0,
+            unfinalizedChildCount: 0,
+            accumulatedChildVotes: 0,
             isFinalized: false
         });
         argumentsCount = 1; // start counting at one
+
+        // Define the stage start times
+        currentStage = Stage.Debating;
+        debatingStartTime = now;
+        votingStartTime = now + stageDurationBaseValue;
+        countingStartTime = votingStartTime + stageDurationBaseValue;
+    }
+
+    function updateStage() public {
+        if (now > countingStartTime)
+            currentStage = Stage.Counting;
+        else if (now > votingStartTime && currentStage < Stage.Voting) // prevents going back
+            currentStage = Stage.Voting;
+        else if (now > debatingStartTime && currentStage < Stage.Debating)
+            currentStage = Stage.Debating;
+    }
+
+    /**
+     * @notice Advance the stage of debate. Remove method in Production.
+     */
+    function advanceStage() public {
+        if (currentStage == Stage.Debating) {
+            votingStartTime = now;
+            currentStage = Stage.Voting;
+        }
+        else if (currentStage == Stage.Voting) {
+            countingStartTime = now;
+            currentStage = Stage.Counting;
+        }
     }
 
     //Each struct represents a node in tree
     struct Argument {
-        bool supporting;
+        bool isSupporting;
         int votes;
 
         address creator;
         uint8 ownId;
         uint8 parentId;
         string text;
-        uint numberOfChildren;
-        int childVotes;  //child votes are zero or higher but we are keeping it int because it's easier
+        uint8 unfinalizedChildCount;
+        int accumulatedChildVotes;  //child votes are zero or higher but we are keeping it int because it's easier
         bool isFinalized;
     }
     mapping ( uint8 => Argument ) public arguments;
-    uint8 totalArgumentsCount = 0;
 
-    function getVotes(uint8 id) public view returns (int) {
-        return arguments[id].votes;
-    }
-
-    function getText(uint8 id) public view returns (string memory) {
-        return arguments[id].text;
-    }
-
-    function addArgument(uint8 _parentId, string memory _text, bool _supporting) public payable {
-        require(argumentsCount <= uint8(255), "There can't be more than 255 subarguments.");
-
-        totalArgumentsCount++; //increment first because the proposal itself has index zero
+    // Getters
+    function addArgument(uint8 _parentId, string memory _text, bool _supporting) public {
+        updateStage();
+        require(currentStage == Stage.Debating);
+        require(argumentsCount <= uint8(255), "There can't be more than 255 arguments.");
 
         // Create a child node and add it to the mapping
-        arguments[totalArgumentsCount] = Argument({
-            supporting: _supporting,
+        arguments[argumentsCount] = Argument({
+            isSupporting: _supporting,
             votes: 0,
             creator: msg.sender,
             ownId: argumentsCount,
             parentId: _parentId,
             text: _text,
-            numberOfChildren: 0,
-            childVotes: 0,
+            unfinalizedChildCount: 0,
+            accumulatedChildVotes: 0,
             isFinalized: false
             }
         );
+        
+        argumentsCount++; //increment afterwards because the proposal itself has index zero
 
         // change parent state accordingly
-        arguments[_parentId].numberOfChildren++;
+        arguments[_parentId].unfinalizedChildCount++;
+
+        if (now > votingStartTime)
+            currentStage = Stage.Voting;
     }
 
-    function finalizeLeafs() public  {
-        for (uint8 i = 0; i < totalArgumentsCount; i++) {
-            if(arguments[i].numberOfChildren == 0)
+    function finalizeLeaves() public  {
+        updateStage();
+        require(currentStage == Stage.Counting);
+
+        for (uint8 i = 0; i < argumentsCount; i++) {
+            if(arguments[i].unfinalizedChildCount == 0)
                 finalize(i,0);
         }
+        currentStage = Stage.Done;
     }
 
 
-    // Finalizes the argument tree up to the largest possible node.
-    // Finalization requires all childs nodes to be finalized.
-    // The finalize method can only be called from leafs (numberOfChildren == 0) to ensure traversal from the bottom to the top.
-    function finalize(uint8 i, int childVotes) internal {
+    /* Finalizes the argument tree up to the highest possible parent argument and stops.
+     * It stops, if the parent arguments contains children that haven't been finalized.
+     * The finalize method can only be called from leaves (unfinalizedChildCount == 0) to ensure traversal from the bottom to the top.
+     */
+    function finalize(uint8 i, int accumulatedChildVotes) internal {
 
-        Argument memory argument = arguments[i];
-        argument.childVotes += childVotes;
-        argument.numberOfChildren--;
+        arguments[i].accumulatedChildVotes += accumulatedChildVotes;
+        if(arguments[i].unfinalizedChildCount > 1)
+            arguments[i].unfinalizedChildCount--;
+        else {
+            arguments[i].unfinalizedChildCount = 0; // all children are finalized
+            arguments[i].isFinalized = true;
+        }
+        // The Argument is then equivalent to a leaf and its cumulative vote weight can be counted for the parent argument.
 
-        if(argument.ownId == 0) { // stop if argument 0 is reached.
-            return;
-        } else if(argument.numberOfChildren == 0) { // all children were removed due to finalization
-            argument.isFinalized = true;
-            int accumulatedVotes = argument.votes+int(childVotes);
+        if(arguments[i].ownId == 0) { // stop if root 0 is reached.
+            arguments[0].isFinalized = true;
+        } else if(arguments[i].unfinalizedChildCount == 0) { // all children were removed due to finalization
+            arguments[i].isFinalized = true;
+            int accumulatedVotes = arguments[i].votes+int(accumulatedChildVotes);
 
             if(accumulatedVotes > 0) { // argument is better than neutral
-                if(argument.supporting){
+                if(arguments[i].isSupporting){
                     finalize(arguments[i].parentId, accumulatedVotes);
                 } else {
                     finalize(arguments[i].parentId, -accumulatedVotes);
                 }
             } else { // Don't count bad arguments
-                finalize(argument.parentId, 0);
+                finalize(arguments[i].parentId, 0);
             }
         }
     }
@@ -112,7 +163,14 @@ contract ArborVote {
     }
     mapping (address => Voter) public voters;
 
+    function getVoteTokens() public view returns (uint8) {
+        return voters[msg.sender].voteTokens;
+    }
+
     function join() external {
+        updateStage();
+        require(currentStage == Stage.Debating || currentStage == Stage.Voting );
+
         require(!voters[msg.sender].joined, "Joined already.");
         voters[msg.sender].joined = true;
         voters[msg.sender].voteTokens = INITIALVOTETOKENS;
@@ -133,15 +191,23 @@ contract ArborVote {
     /// Events
     event Voted(address indexed entity, uint8 argumentId, uint8 voteStrength);
 
+    function prepareVotum(uint8 id, uint8 voteStrength) internal {
+        require(id != 0, "Voting directly on the root argument is prohibited.");
+        require(currentStage == Stage.Voting);
+        require(voters[msg.sender].joined == true, "Voter must join first");
+
+        // pay
+        uint8 cost = quadraticCost(voteStrength);
+        payForVote(msg.sender, cost);
+    }
 
     /**
      * @notice Vote for argument `id` with vote strength `voteStrength`
      * @param id ID of the argument to vote for
      */
     function voteFor(uint8 id, uint8 voteStrength) public {
-        require(voters[msg.sender].joined == true, "Voter must join first");
-        uint8 cost = quadraticCost(voteStrength);
-        payForVote(msg.sender, cost);
+        updateStage();
+        prepareVotum(id, voteStrength);
         arguments[id].votes += voteStrength;
         emit Voted(msg.sender, id, voteStrength);
     }
@@ -151,9 +217,8 @@ contract ArborVote {
      * @param id ID of the argument to vote against
      */
     function voteAgainst(uint8 id, uint8 voteStrength) public {
-        require(voters[msg.sender].joined == true, "Voter must join first");
-        uint8 cost = quadraticCost(voteStrength);
-        payForVote(msg.sender, cost);
+        updateStage();
+        prepareVotum(id, voteStrength);
         arguments[id].votes -= voteStrength;
         emit Voted(msg.sender, id, voteStrength);
     }
