@@ -173,7 +173,7 @@ contract ArborVote {
     }
 
     modifier votable(uint8 id) {
-        require(voters[msg.sender].votedOnArgument[id] == false, "You can only vote once on an argument");
+        require(voters[msg.sender].votedOnArgument[id] == false, "Voting is only allowed once per argument.");
         _;
         voters[msg.sender].votedOnArgument[id] = true;
     }

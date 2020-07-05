@@ -97,6 +97,10 @@ describe("ArborVote", function () {
     await voteAndCheckHelper(6, -1).catch(function (err) { console.log(err); });
   });
 
+  it("should revert if a voter tries to vote more than once on the same argument", async function () {
+    await expect(arborVote.voteFor(2, 1)).to.be.revertedWith("Voting is only allowed once per argument.");
+  });
+
   it("should finalize the arguments.", async function () {
     await arborVote.advanceStage();
     expect(await arborVote.currentStage()).to.equal(3);
