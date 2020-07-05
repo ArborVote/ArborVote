@@ -164,6 +164,7 @@ contract ArborVote {
     struct Voter {
         uint8 voteTokens;
         bool joined;
+        mapping (uint8 => bool) votedOnArgument;
     }
     mapping (address => Voter) public voters;
 
@@ -171,13 +172,19 @@ contract ArborVote {
         return voters[msg.sender].voteTokens;
     }
 
+    function checkVote(uint8 id) internal {
+        require(voters[msg.sender].votedOnArgument[id] != false, "You can only vote once on an argument");
+    }
+
     function join() external {
         updateStage();
         require(currentStage == Stage.Debating || currentStage == Stage.Voting );
 
-        require(!voters[msg.sender].joined, "Joined already.");
-        voters[msg.sender].joined = true;
-        voters[msg.sender].voteTokens = INITIALVOTETOKENS;
+        Voter storage voter = voters[msg.sender];
+
+        require(!voter.joined, "Joined already.");
+        voter.joined = true;
+        voter.voteTokens = INITIALVOTETOKENS;
     }
 
     function payForVote(address voterAddr, uint8 cost) internal {
