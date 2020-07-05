@@ -172,8 +172,10 @@ contract ArborVote {
         return voters[msg.sender].voteTokens;
     }
 
-    function checkVote(uint8 id) internal {
-        require(voters[msg.sender].votedOnArgument[id] != false, "You can only vote once on an argument");
+    modifier votable(uint8 id) {
+        require(voters[msg.sender].votedOnArgument[id] == false, "You can only vote once on an argument");
+        _;
+        voters[msg.sender].votedOnArgument[id] = true;
     }
 
     function join() external {
@@ -216,7 +218,7 @@ contract ArborVote {
      * @notice Vote for argument `id` with vote strength `voteStrength`
      * @param id ID of the argument to vote for
      */
-    function voteFor(uint8 id, uint8 voteStrength) public {
+    function voteFor(uint8 id, uint8 voteStrength) public votable(id) {
         updateStage();
         prepareVotum(id, voteStrength);
         arguments[id].votes = arguments[id].votes + voteStrength;
@@ -227,7 +229,7 @@ contract ArborVote {
      * @notice Vote against argument `id` with vote strength `voteStrength`
      * @param id ID of the argument to vote against
      */
-    function voteAgainst(uint8 id, uint8 voteStrength) public {
+    function voteAgainst(uint8 id, uint8 voteStrength) public votable(id) {
         updateStage();
         prepareVotum(id, voteStrength);
         arguments[id].votes = arguments[id].votes - voteStrength;
