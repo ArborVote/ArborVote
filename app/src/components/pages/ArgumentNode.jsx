@@ -1,15 +1,16 @@
 import React from "react";
+import { Icon } from "@iconify/react";
+import hasChildrenIcon from "@iconify/icons-carbon/parent-child";
 
-export const getAccountString = (account) => {
+export const getAccountString = account => {
     const len = account.length;
-    return account.substr(0, 5) + '...' + account.substr(len-3,len-1);
-}
+    return account.substr(0, 5) + "..." + account.substr(len - 3, len - 1);
+};
 
 const ArgumentNode = ({ node, argument, isRoot, onClick }) => {
-    const supportingClass = argument.supporting ? "pro" : "con";
+    const supportingClass = argument.isSupporting ? "pro" : "con";
     const rootClass = isRoot ? "root" : "";
-    const hasChildrenClass =
-        argument.ownId === argument.parentId ? "hasChildren" : "";
+    const hasChildren = !isRoot && node.children && node.children.length > 0;
     return (
         <div
             className={`argumentNode ${rootClass} ${supportingClass}`}
@@ -21,9 +22,11 @@ const ArgumentNode = ({ node, argument, isRoot, onClick }) => {
             <p>{"Text: " + argument.text}</p>
             <p>{"Votes: " + argument.votes}</p>
             <p>{"Creator: " + getAccountString(argument.creator)}</p>
-            <p>{"Child Votes: " + argument.childVotes}</p>
-            <p>{"Children: " + argument.numberOfChildren}</p>
+            <p>{"Child Votes: " + argument.accumulatedChildVotes}</p>
             <p>{"Finalized: " + argument.isFinalized}</p>
+            {hasChildren && (
+                <Icon icon={hasChildrenIcon} className="hasChildren" />
+            )}
         </div>
     );
 };

@@ -3,13 +3,12 @@ import { getStringFromRole, getRoleFromString, logReceipt } from "../helpers";
 export const contractService = {
     getArgumentsCount,
     getStartTime,
+    getStageDuration,
     getStage,
     advanceStage,
     getAllArguments,
     getArgument,
     getVoter,
-    getVotes,
-    getText,
     addArgument,
     finalizeLeaves,
     join,
@@ -24,38 +23,32 @@ async function getArgumentsCount(contract, account) {
     return parseInt(totalArguments);
 }
 
-async function getStartTime(contract, account) {
-    const totalArguments = await contract.methods
-        .startTime()
-        .call({ from: account });
-    return parseInt(totalArguments);
+async function getStartTime(contract, account, stage) {
+    const startTime =
+        stage === 3
+            ? await contract.methods.countingStartTime().call({ from: account })
+            : stage === 2
+            ? await contract.methods.votingStartTime().call({ from: account })
+            : await contract.methods
+                  .debatingStartTime()
+                  .call({ from: account });
+    return parseInt(startTime);
 }
 
 async function getStage(contract, account) {
-    const stage = await contract.methods
-        .stage()
-        .call({ from: account });
+    const stage = await contract.methods.currentStage().call({ from: account });
     return parseInt(stage);
 }
 
+async function getStageDuration(contract, account) {
+    const stageDuration = await contract.methods
+        .stageDurationBaseValue()
+        .call({ from: account });
+    return parseInt(stageDuration);
+}
+
 async function advanceStage(contract, account) {
-    return await contract.methods
-        .advanceStage()
-        .send({ from: account });
-}
-
-async function getVotes(contract, account, id) {
-    const votes = await contract.methods
-        .getVotes(parseInt(id))
-        .call({ from: account });
-    return parseInt(votes);
-}
-
-async function getText(contract, account, id) {
-    const text = await contract.methods
-        .getText(parseInt(id))
-        .call({ from: account });
-    return text;
+    return await contract.methods.advanceStage().send({ from: account });
 }
 
 async function getVoter(contract, account, address) {
@@ -85,7 +78,6 @@ async function getAllArguments(contract, account) {
     return result;
 }
 
-
 async function addArgument(contract, account, parentId, text, isSupporting) {
     const receipt = await contract.methods
         .addArgument(parseInt(parentId), text, isSupporting)
@@ -99,7 +91,7 @@ async function addArgument(contract, account, parentId, text, isSupporting) {
 
 async function finalizeLeaves(contract, account) {
     const receipt = await contract.methods
-        .finalizeLeafs()
+        .finalizeLeaves()
         .send({ from: account });
     if (!receipt.status) {
         logReceipt(receipt);

@@ -13,3 +13,5 @@ coverage.json
 .coverage_cache
 .coverage_contracts
 *.swp
+*.log
+*.firebase

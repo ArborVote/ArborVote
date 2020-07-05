@@ -1,12 +1,12 @@
 import React from "react";
 
-const BoxFilled = ({ keyValue, onClick }) => (
-    <span key={keyValue} onClick={onClick} className="box">
+const BoxFilled = ({ keyValue, onClick, className }) => (
+    <span key={keyValue} onClick={onClick} className={`box filled ${className}`}>
         {"\u25c6"}
     </span>
 );
-const BoxOutline = ({ keyValue, onClick }) => (
-    <span key={keyValue} onClick={onClick} className="box">
+const BoxOutline = ({ keyValue, onClick, className }) => (
+    <span key={keyValue} onClick={onClick} className={`box outline ${className}`}>
         {"\u25c7"}
     </span>
 );
@@ -34,6 +34,7 @@ const ArgumentTree = ({ root, selected, updateSelected }) => {
                             <BoxFilled
                                 key={child.id}
                                 keyValue={child.id}
+                                className={child.isSupporting ? "pro" : "con"}
                                 onClick={() => {
                                     updateSelected(child);
                                 }}
@@ -44,6 +45,7 @@ const ArgumentTree = ({ root, selected, updateSelected }) => {
                         <BoxOutline
                             key={child.id}
                             keyValue={child.id}
+                            className={child.isSupporting ? "pro" : "con"}
                             onClick={() => {
                                 updateSelected(child);
                             }}

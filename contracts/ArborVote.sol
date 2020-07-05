@@ -9,7 +9,8 @@ contract ArborVote {
         Init,
         Debating,
         Voting,
-        Counting
+        Counting,
+        Done
     }
     Stage public currentStage = Stage.Init;
 
@@ -115,6 +116,7 @@ contract ArborVote {
             if(arguments[i].unfinalizedChildCount == 0)
                 finalize(i,0);
         }
+        currentStage = Stage.Done;
     }
 
 

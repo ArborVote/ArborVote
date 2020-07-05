@@ -17,6 +17,17 @@
     .box {
         cursor: pointer;
         margin: 0.2rem;
+        &.pro {
+            color: $green;
+            outline: $green;
+        }
+        &.con {
+            color: $red;
+            outline: $red;
+        }
+        &.filled{
+            color: $blue2;
+        }
     }
     .level {
         display: flex;
@@ -27,6 +38,7 @@
 
 .argumentNode {
     cursor: pointer;
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -49,6 +61,11 @@
     }
     &:hover {
         outline: solid 1px black;
+    }
+    .hasChildren {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
     }
 }
 
