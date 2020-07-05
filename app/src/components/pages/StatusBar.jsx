@@ -27,10 +27,9 @@ const getRemainingTime = startTime => {
     const now = new Date();
     const oneDays = 24 * 60 * 60 * 1000;
     const endTime = new Date(startTime * 1000 + oneDays);
-    console.log({now, endTime});
     const diffMillis = endTime - now;
-    const diffHours = Math.round(diffMillis / (1000 * 60 * 60));
-    const diffMins = Math.round(((diffMillis % 86400000) % 3600000) / 60000);
+    const diffHours = parseInt(diffMillis / (1000 * 60 * 60));
+    const diffMins = parseInt(((diffMillis % 86400000) % 3600000) / 60000);
     return diffHours + " hrs " + diffMins + " mins";
 };
 

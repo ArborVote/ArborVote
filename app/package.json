@@ -6,8 +6,8 @@
   "license": "ISC",
   "private": true,
   "scripts": {
-    "build": "rm -rf ./dist && webpack --mode production",
-    "start": "webpack-dev-server"
+    "build": "rm -rf ./dist && webpack --config webpack.rinkeby.js",
+    "start": "webpack-dev-server --config webpack.local.js"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
@@ -20,7 +20,8 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "web3": "^1.2.9"
+    "web3": "^1.2.9",
+    "webpack-merge": "^4.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

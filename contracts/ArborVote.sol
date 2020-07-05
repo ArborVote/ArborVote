@@ -1,8 +1,12 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.6.8;
 
+import "./SafeMath.sol";
+
 contract ArborVote {
-    // State
+
+    using SafeMath for uint8;
+
     uint8 public argumentsCount = 0;
 
     enum Stage {
@@ -99,10 +103,10 @@ contract ArborVote {
             }
         );
         
-        argumentsCount++; //increment afterwards because the proposal itself has index zero
+        argumentsCount = argumentsCount.add(1); //increment afterwards because the proposal itself has index zero
 
         // change parent state accordingly
-        arguments[_parentId].unfinalizedChildCount++;
+        arguments[_parentId].unfinalizedChildCount = arguments[_parentId].unfinalizedChildCount.add(1);
 
         if (now > votingStartTime)
             currentStage = Stage.Voting;
@@ -128,7 +132,7 @@ contract ArborVote {
 
         arguments[i].accumulatedChildVotes += accumulatedChildVotes;
         if(arguments[i].unfinalizedChildCount > 1)
-            arguments[i].unfinalizedChildCount--;
+            arguments[i].unfinalizedChildCount = arguments[i].unfinalizedChildCount.sub(1);
         else {
             arguments[i].unfinalizedChildCount = 0; // all children are finalized
             arguments[i].isFinalized = true;
@@ -178,7 +182,7 @@ contract ArborVote {
 
     function payForVote(address voterAddr, uint8 cost) internal {
         require(voters[voterAddr].voteTokens >= cost, "Insufficient vote tokens");
-        voters[voterAddr].voteTokens -= cost;
+        voters[voterAddr].voteTokens = voters[voterAddr].voteTokens.sub(cost);
     }
 
     function quadraticCost(uint8 voteStrength) internal pure returns(uint8) {
@@ -208,7 +212,7 @@ contract ArborVote {
     function voteFor(uint8 id, uint8 voteStrength) public {
         updateStage();
         prepareVotum(id, voteStrength);
-        arguments[id].votes += voteStrength;
+        arguments[id].votes = arguments[id].votes + voteStrength;
         emit Voted(msg.sender, id, voteStrength);
     }
 
@@ -219,7 +223,16 @@ contract ArborVote {
     function voteAgainst(uint8 id, uint8 voteStrength) public {
         updateStage();
         prepareVotum(id, voteStrength);
-        arguments[id].votes -= voteStrength;
+        arguments[id].votes = arguments[id].votes - voteStrength;
         emit Voted(msg.sender, id, voteStrength);
     }
+
+    /* @notice refuses ether sent with no txData
+     */
+    receive() external payable { revert(); }
+
+    /* @notice refuses ether sent with txData that
+     * does not match any function signature in the contract
+     */
+    fallback() external {}
 }

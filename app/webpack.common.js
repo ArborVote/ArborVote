@@ -1,8 +1,6 @@
 var HtmlWebpackPlugin = require("html-webpack-plugin");
-//var fs = require('fs');
 
 module.exports = {
-    mode: "development",
     entry: {
         app: ["babel-polyfill", "./src/index.jsx"]
     },
@@ -81,20 +79,6 @@ module.exports = {
             template: "./src/index.html"
         })
     ],
-    devServer: {
-        historyApiFallback: true,
-        hot: true,
-        host: "localhost",
-        port: 3000
-    },
-    externals: {
-        config: JSON.stringify({
-            // networkId: 4447,
-            // contractAddress: "0xCfEB869F69431e42cdB54A4F4f105C19C080A601"
-            networkId: 4,
-            contractAddress: "0x397E355eC9bCd6AaCAD91D265Ff54Ad7679a8109"
-        })
-    },
     optimization: {
         splitChunks: {
             cacheGroups: {
