@@ -1,13 +1,16 @@
 //SPDX-License-Identifier: MIT
+
 pragma solidity ^0.6.8;
+pragma experimental ABIEncoderV2;
 
 import "./SafeMath.sol";
+import "./SignedSafeMath.sol";
 
 contract ArborVote {
 
-    using SafeMath for uint8;
-
-    uint8 public argumentsCount = 0;
+    using SafeMath8 for uint8;
+    using SafeMath256 for uint256;
+    using SignedSafeMath256 for int256;
 
     enum Stage {
         Init,
@@ -16,85 +19,112 @@ contract ArborVote {
         Counting,
         Done
     }
-    Stage public currentStage = Stage.Init;
 
-    uint public debatingStartTime;
-    uint public votingStartTime;
-    uint public countingStartTime;
+    // Each struct represents a node in tree
+    struct Argument {
+        bool isSupporting;
+        int256 votes;
+        address creator;
+        uint8 parentId;
+        string text;
+        uint8 unfinalizedChildCount;
+        int256 accumulatedChildVotes;  // int256 for summing up con arguments as negative votes
+        bool isFinalized;
+    }
 
-    uint constant stageDurationBaseValue = 1 days;
+    struct Voter {
+        uint8 voteTokens;
+        bool joined;
+    }
+
+    // Events
+    event Voted(address indexed entity, uint8 argumentId, int8 voteStrength);
+
+    struct Debate {
+        Stage currentStage;
+        address creator;
+        uint8 argumentsCount;
+        mapping (uint8 => Argument) arguments;
+        mapping (address => Voter) voters;
+        uint8 initialVoteTokens;
+        uint256 debatingStartTime;
+        uint256 votingStartTime;
+        uint256 countingStartTime;
+        uint256 stageDuration;
+    }
+    uint256 public debatesCount;
+    mapping ( uint256 => Debate ) public debates;
+
 
     constructor (string memory _text) public {
-        arguments[0] = Argument({ // Argument 0 is the proposal itself
+        uint256 stageDurationBaseValue = 1 days;
+        debates[0] = Debate({ 
+        currentStage: Stage.Debating,
+        creator: msg.sender,
+        argumentsCount: 1, // start counting at one
+        initialVoteTokens: 12,
+        debatingStartTime: now,
+        stageDuration: stageDurationBaseValue,
+        votingStartTime: now.add(stageDurationBaseValue),
+        countingStartTime: now.add(stageDurationBaseValue).add(stageDurationBaseValue)
+        });
+        debatesCount = 1;
+        debates[0].arguments[0] = Argument({ // Argument 0 is the proposal itself
             isSupporting: true, // makes no sense for the proposal - just set to true
             votes: 0,
             creator: msg.sender,
-            ownId: 0,
             parentId: 0,
             text: _text,
             unfinalizedChildCount: 0,
             accumulatedChildVotes: 0,
             isFinalized: false
         });
-        argumentsCount = 1; // start counting at one
-
-        // Define the stage start times
-        currentStage = Stage.Debating;
-        debatingStartTime = now;
-        votingStartTime = now + stageDurationBaseValue;
-        countingStartTime = votingStartTime + stageDurationBaseValue;
     }
 
-    function updateStage() public {
-        if (now > countingStartTime)
-            currentStage = Stage.Counting;
-        else if (now > votingStartTime && currentStage < Stage.Voting) // prevents going back
-            currentStage = Stage.Voting;
-        else if (now > debatingStartTime && currentStage < Stage.Debating)
-            currentStage = Stage.Debating;
+    function updateStage(uint256 _debateId) public {
+        Debate storage debate = debates[_debateId];
+        if (now > debate.countingStartTime)
+            debate.currentStage = Stage.Counting;
+        else if (now > debate.votingStartTime && debate.currentStage < Stage.Voting) // prevents going back
+            debate.currentStage = Stage.Voting;
+        else if (now > debate.debatingStartTime && debate.currentStage < Stage.Debating)
+            debate.currentStage = Stage.Debating;
+    }
+
+    function currentStage(uint256 _debateId) public view returns(Stage) {
+        return debates[_debateId].currentStage;
     }
 
     /**
-     * @notice Advance the stage of debate. Remove method in Production.
+     * @notice Advance the stage of debate. Remove method in main-net.
      */
-    function advanceStage() public {
-        if (currentStage == Stage.Debating) {
-            votingStartTime = now;
-            currentStage = Stage.Voting;
+    function advanceStage(uint256 _debateId) public {
+        Debate storage debate = debates[_debateId];
+        if (debate.currentStage == Stage.Debating) {
+            debate.votingStartTime = now;
+            debate.currentStage = Stage.Voting;
         }
-        else if (currentStage == Stage.Voting) {
-            countingStartTime = now;
-            currentStage = Stage.Counting;
+        else if (debate.currentStage == Stage.Voting) {
+            debate.countingStartTime = now;
+            debate.currentStage = Stage.Counting;
         }
     }
 
-    //Each struct represents a node in tree
-    struct Argument {
-        bool isSupporting;
-        int votes;
-
-        address creator;
-        uint8 ownId;
-        uint8 parentId;
-        string text;
-        uint8 unfinalizedChildCount;
-        int accumulatedChildVotes;  //child votes are zero or higher but we are keeping it int because it's easier
-        bool isFinalized;
+    function getArgument(uint256 _debateId, uint8 _argumentId) public view returns (Argument memory) {
+        return debates[_debateId].arguments[_argumentId];
     }
-    mapping ( uint8 => Argument ) public arguments;
 
-    // Getters
-    function addArgument(uint8 _parentId, string memory _text, bool _supporting) public {
-        updateStage();
-        require(currentStage == Stage.Debating);
-        require(argumentsCount <= uint8(255), "There can't be more than 255 arguments.");
+    function addArgument(uint256 _debateId, uint8 _parentId, string memory _text, bool _supporting) public {
+        updateStage(_debateId);
+        Debate storage debate = debates[_debateId];
+        require(debate.currentStage == Stage.Debating);
+        require(debate.argumentsCount <= uint8(255), "There can't be more than 255 arguments.");
 
         // Create a child node and add it to the mapping
-        arguments[argumentsCount] = Argument({
+        debate.arguments[debate.argumentsCount] = Argument({
             isSupporting: _supporting,
             votes: 0,
             creator: msg.sender,
-            ownId: argumentsCount,
             parentId: _parentId,
             text: _text,
             unfinalizedChildCount: 0,
@@ -103,24 +133,25 @@ contract ArborVote {
             }
         );
         
-        argumentsCount = argumentsCount.add(1); //increment afterwards because the proposal itself has index zero
+        debate.argumentsCount = debate.argumentsCount.add(1); //increment afterwards because the proposal itself has index zero
 
         // change parent state accordingly
-        arguments[_parentId].unfinalizedChildCount = arguments[_parentId].unfinalizedChildCount.add(1);
+        debate.arguments[_parentId].unfinalizedChildCount = debate.arguments[_parentId].unfinalizedChildCount.add(1);
 
-        if (now > votingStartTime)
-            currentStage = Stage.Voting;
+        if (now > debate.votingStartTime)
+            debate.currentStage = Stage.Voting;
     }
 
-    function finalizeLeaves() public  {
-        updateStage();
-        require(currentStage == Stage.Counting);
+    function finalizeLeaves(uint256 _debateId) public {
+        updateStage(_debateId);
+        Debate storage debate = debates[_debateId];
+        require(debate.currentStage == Stage.Counting);
 
-        for (uint8 i = 0; i < argumentsCount; i++) {
-            if(arguments[i].unfinalizedChildCount == 0)
-                finalize(i,0);
+        for (uint8 i = 0; i < debate.argumentsCount; i++) {
+            if(debate.arguments[i].unfinalizedChildCount == 0)
+                finalize(_debateId, i, 0);
         }
-        currentStage = Stage.Done;
+        debate.currentStage = Stage.Done;
     }
 
 
@@ -128,61 +159,56 @@ contract ArborVote {
      * It stops, if the parent arguments contains children that haven't been finalized.
      * The finalize method can only be called from leaves (unfinalizedChildCount == 0) to ensure traversal from the bottom to the top.
      */
-    function finalize(uint8 i, int accumulatedChildVotes) internal {
+    function finalize(uint256 _debateId, uint8 _argumentId, int256 _accumulatedChildVotes) internal {
+        Debate storage debate = debates[_debateId];
+        Argument storage argument = debate.arguments[_argumentId];
 
-        arguments[i].accumulatedChildVotes += accumulatedChildVotes;
-        if(arguments[i].unfinalizedChildCount > 1)
-            arguments[i].unfinalizedChildCount = arguments[i].unfinalizedChildCount.sub(1);
+        argument.accumulatedChildVotes = argument.accumulatedChildVotes.add(_accumulatedChildVotes);
+        if(argument.unfinalizedChildCount > 1)
+            argument.unfinalizedChildCount = argument.unfinalizedChildCount.sub(1);
         else {
-            arguments[i].unfinalizedChildCount = 0; // all children are finalized
-            arguments[i].isFinalized = true;
+            argument.unfinalizedChildCount = 0; // all children are finalized
+            argument.isFinalized = true;
         }
-        // The Argument is then equivalent to a leaf and its cumulative vote weight can be counted for the parent argument.
+        // The Argument is then equivalent to a leaf and its cumulative vote weight can be counted for the parent debate[_debateId].argument.
 
-        if(arguments[i].ownId == 0) { // stop if root 0 is reached.
-            arguments[0].isFinalized = true;
-        } else if(arguments[i].unfinalizedChildCount == 0) { // all children were removed due to finalization
-            arguments[i].isFinalized = true;
-            int accumulatedVotes = arguments[i].votes+int(accumulatedChildVotes);
+        if(_argumentId == 0) { // stop if root 0 is reached.
+            debate.arguments[0].isFinalized = true;
+        } else if(argument.unfinalizedChildCount == 0) { // all children were removed due to finalization
+            argument.isFinalized = true;
+            int256 accumulatedVotes = argument.votes.add(_accumulatedChildVotes);
 
-            if(accumulatedVotes > 0) { // argument is better than neutral
-                if(arguments[i].isSupporting){
-                    finalize(arguments[i].parentId, accumulatedVotes);
+            if(accumulatedVotes > 0) { // debate[_debateId].argument is better than neutral
+                if(argument.isSupporting){
+                    finalize(_debateId, argument.parentId, accumulatedVotes);
                 } else {
-                    finalize(arguments[i].parentId, -accumulatedVotes);
+                    finalize(_debateId, argument.parentId, -accumulatedVotes);
                 }
-            } else { // Don't count bad arguments
-                finalize(arguments[i].parentId, 0);
+            } else { // Don't count bad debate[_debateId].arguments
+                finalize(_debateId, argument.parentId, 0);
             }
         }
     }
 
-    /********** VOTING RELATED ************/
 
-    uint8 public constant INITIALVOTETOKENS = 12;
-
-    struct Voter {
-        uint8 voteTokens;
-        bool joined;
-    }
-    mapping (address => Voter) public voters;
-
-    function getVoteTokens() public view returns (uint8) {
-        return voters[msg.sender].voteTokens;
+    function getVoteTokens(uint256 _debateId) public view returns (uint8) {
+        return debates[_debateId].voters[msg.sender].voteTokens;
     }
 
-    function join() external {
-        updateStage();
-        require(currentStage == Stage.Debating || currentStage == Stage.Voting );
+    function join(uint256 _debateId) external {
+        updateStage(_debateId);
+        Debate storage debate = debates[_debateId];
+        require(debate.currentStage == Stage.Debating || debate.currentStage == Stage.Voting );
 
-        require(!voters[msg.sender].joined, "Joined already.");
-        voters[msg.sender].joined = true;
-        voters[msg.sender].voteTokens = INITIALVOTETOKENS;
+        require(!debate.voters[msg.sender].joined, "Joined already.");
+        debate.voters[msg.sender].joined = true;
+        debate.voters[msg.sender].voteTokens = debate.initialVoteTokens;
     }
 
-    function payForVote(address voterAddr, uint8 cost) internal {
-        require(voters[voterAddr].voteTokens >= cost, "Insufficient vote tokens");
-        voters[voterAddr].voteTokens = voters[voterAddr].voteTokens.sub(cost);
+    function payForVote(uint256 _debateId, address voterAddr, uint8 cost) internal {
+        Debate storage debate = debates[_debateId];
+        require(debate.voters[voterAddr].voteTokens >= cost, "Insufficient vote tokens");
+        debate.voters[voterAddr].voteTokens = debate.voters[voterAddr].voteTokens.sub(cost);
     }
 
     function quadraticCost(uint8 voteStrength) internal pure returns(uint8) {
@@ -192,39 +218,40 @@ contract ArborVote {
         return voteStrength * voteStrength;
     }
 
-    /// Events
-    event Voted(address indexed entity, uint8 argumentId, uint8 voteStrength);
 
-    function prepareVotum(uint8 id, uint8 voteStrength) internal {
-        require(id != 0, "Voting directly on the root argument is prohibited.");
-        require(currentStage == Stage.Voting);
-        require(voters[msg.sender].joined == true, "Voter must join first");
+    function prepareVotum(uint256 _debateId, uint8 _argumentId, uint8 _voteStrength) internal {
+        require(_argumentId != 0, "Voting directly on the root argument is prohibited.");
+        Debate storage debate = debates[_debateId];
+        require(debate.currentStage == Stage.Voting);
+        require(debate.voters[msg.sender].joined == true, "Voter must join first");
 
         // pay
-        uint8 cost = quadraticCost(voteStrength);
-        payForVote(msg.sender, cost);
+        uint8 cost = quadraticCost(_voteStrength);
+        payForVote(_debateId, msg.sender, cost);
     }
 
     /**
-     * @notice Vote for argument `id` with vote strength `voteStrength`
-     * @param id ID of the argument to vote for
+     * @notice Vote for argument `_argumentId` with vote strength `_voteStrength`
+     * @param _argumentId ID of the argument to vote for
      */
-    function voteFor(uint8 id, uint8 voteStrength) public {
-        updateStage();
-        prepareVotum(id, voteStrength);
-        arguments[id].votes = arguments[id].votes + voteStrength;
-        emit Voted(msg.sender, id, voteStrength);
+    function voteFor(uint256 _debateId, uint8 _argumentId, uint8 _voteStrength) public {
+        updateStage(_debateId);
+        prepareVotum(_debateId, _argumentId, _voteStrength);
+        Argument storage argument = debates[_debateId].arguments[_argumentId];
+        argument.votes = argument.votes.add(_voteStrength);
+        emit Voted(msg.sender, _argumentId, int8(_voteStrength));
     }
 
     /**
-     * @notice Vote against argument `id` with vote strength `voteStrength`
-     * @param id ID of the argument to vote against
+     * @notice Vote against argument `_argumentId` with vote strength `_voteStrength`
+     * @param _argumentId ID of the argument to vote against
      */
-    function voteAgainst(uint8 id, uint8 voteStrength) public {
-        updateStage();
-        prepareVotum(id, voteStrength);
-        arguments[id].votes = arguments[id].votes - voteStrength;
-        emit Voted(msg.sender, id, voteStrength);
+    function voteAgainst(uint256 _debateId, uint8 _argumentId, uint8 _voteStrength) public {
+        updateStage(_debateId);
+        prepareVotum(_debateId, _argumentId, _voteStrength);
+        Argument storage argument = debates[_debateId].arguments[_argumentId];
+        argument.votes = argument.votes.sub(_voteStrength);
+        emit Voted(msg.sender, _argumentId, -int8(_voteStrength));
     }
 
     /* @notice refuses ether sent with no txData
