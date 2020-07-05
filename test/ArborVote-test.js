@@ -24,24 +24,19 @@ before(async function () {
   await arborVote.addArgument(3, "1.1.1", true); // id 6
 });
 
-describe("Initial vote tokens", function () {
-  it('should be 12', async function () {
+describe("ArborVote", function () {
+  it('should have a number of initial vote tokens equal to 12.', async function () {
     expect(await arborVote.INITIALVOTETOKENS()).to.equal(12);
   });
-});
 
-describe("constructor", async function () {
   it("should return the root thesis after the constructor was executed.", async function () {
     const root = await arborVote.arguments(0);
     expect(await root.text).to.equal("Trees are great!");
   });
 
-  it('should set the stage to "Debating"', async function () {
+  it('should set the stage to "Debating" after initializatiob', async function () {
     expect(await arborVote.currentStage()).to.equal(1);
   });
-});
-
-describe("addArgument", async function () {
 
   it("should assign the argument ids.", async function () {
     for (let arr of [[1, "1"], [2, "2"], [3, "1.1"], [4, "1.2"], [5, "2.1"], [6, "1.1.1"]]) {
@@ -67,10 +62,7 @@ describe("addArgument", async function () {
       expect(arg.unfinalizedChildCount).to.equal(expected);
     }
   });
-});
 
-
-describe("vote", async function () {
   it("should change the number of votes and vote tokens left.", async function () {
 
     const voteAndCheckHelper = async function checkVote(id, voteStrength) {
@@ -93,32 +85,17 @@ describe("vote", async function () {
     expect(await arborVote.currentStage()).to.equal(2);
 
     // vote on arg 1 (id=1)
-    await voteAndCheckHelper(1, 2).catch(function (err) {
-      console.log(err);
-    });
+    await voteAndCheckHelper(1, 2).catch(function (err) { console.log(err); });
 
     // vote on arg 2 (id=2)
-    await voteAndCheckHelper(2, 2).catch(function (err) {
-      console.log(err);
-    });
-
-    await voteAndCheckHelper(2, -1).catch(function (err) {
-      console.log(err);
-    });
+    await voteAndCheckHelper(2, 2).catch(function (err) { console.log(err); });
 
     // vote on arg 1.1 (id=3)
-    await voteAndCheckHelper(3, 1).catch(function (err) {
-      console.log(err);
-    });
+    await voteAndCheckHelper(3, 1).catch(function (err) { console.log(err); });
 
     // vote on arg 1.1.1 (id=6)
-    await voteAndCheckHelper(6, -1).catch(function (err) {
-      console.log(err);
-    });
+    await voteAndCheckHelper(6, -1).catch(function (err) { console.log(err); });
   });
-});
-
-describe("finalizeLeaves", async function () {
 
   it("should finalize the arguments.", async function () {
     await arborVote.advanceStage();
@@ -134,7 +111,7 @@ describe("finalizeLeaves", async function () {
 
   it("should accumulate the child votes correctly.", async function () {
     // Arg 1.1.1 (id=6) is a bad argument and results in Arg 1.1 (id=3) having 0 accumulated child votes
-    for (let arr of [[6, 0], [5, 0], [4, 0], [3, 0], [2, 0], [1, 1], [0, 2]]) {
+    for (let arr of [[6, 0], [5, 0], [4, 0], [3, 0], [2, 0], [1, 1], [0, 1]]) {
       const id = arr[0], expected = arr[1];
       const arg = await arborVote.arguments(id);
       expect(arg.accumulatedChildVotes).to.equal(expected);
@@ -142,7 +119,7 @@ describe("finalizeLeaves", async function () {
   });
 
   it("should accumulate the votes correctly.", async function () {
-    for (let arr of [[6, -1], [5, 0], [4, 0], [3, 1], [2, 1], [1, 3], [0, 2]]) {
+    for (let arr of [[6, -1], [5, 0], [4, 0], [3, 1], [2, 2], [1, 3], [0, 1]]) {
       const id = arr[0], expected = arr[1];
       const arg = await arborVote.arguments(id);
       expect(Number(await arg.votes) + Number(await arg.accumulatedChildVotes)).to.equal(expected);
