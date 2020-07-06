@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.6.8;
+pragma solidity >=0.6.8;
 
 import "./SafeMath.sol";
 
@@ -24,19 +24,25 @@ contract ArborVote {
 
     uint constant stageDurationBaseValue = 1 days;
 
-    constructor (string memory _text) public {
+    constructor () public {
         arguments[0] = Argument({ // Argument 0 is the proposal itself
             isSupporting: true, // makes no sense for the proposal - just set to true
             votes: 0,
             creator: msg.sender,
             ownId: 0,
             parentId: 0,
-            text: _text,
+            text: "",
             unfinalizedChildCount: 0,
             accumulatedChildVotes: 0,
             isFinalized: false
         });
         argumentsCount = 1; // start counting at one
+
+        currentStage = Stage.Init;
+    }
+
+    function init(string memory _rootThesisText) public {
+        arguments[0].text = _rootThesisText;
 
         // Define the stage start times
         currentStage = Stage.Debating;

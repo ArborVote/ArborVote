@@ -11,6 +11,10 @@
     "test": "buidler test --network buidlerevm",
     "coverage": "buidler coverage --network coverage"
   },
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.1.0",
+    "@optionality.io/clone-factory": "^0.2.1"
+  },
   "devDependencies": {
     "@nomiclabs/buidler": "^1.3.8",
     "@nomiclabs/buidler-ethers": "^2.0.0",
