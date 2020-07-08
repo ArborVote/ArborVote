@@ -2,7 +2,7 @@ const merge = require("webpack-merge");
 const common = require("./webpack.common.js");
 
 module.exports = merge(common, {
-    mode: "rinkeby",
+    mode: "production",
     devtool: "source-map",
     externals: {
         config: JSON.stringify({
